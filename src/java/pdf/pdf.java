@@ -29,13 +29,14 @@ public class pdf extends HttpServlet {
         //String nss = "12345vfggjh";
         //String regimen = "1945";
         int i = 1;
-        String ruta = "http://localhost:8080/SAMP/impcamb.html";
+        String ruta = "http://localhost:8084/SAMP/impcamb.html";
         try{
         Class.forName("com.mysql.jdbc.Driver");
-        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","n0m3l0");
+        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","Andy94");
         stm = conx.createStatement();
-        PdfReader reader = new PdfReader("C:/Users/Alumno/Desktop/vacio.pdf");
-        PdfStamper stamper = new PdfStamper(reader, new FileOutputStream("C:/Users/Alumno/Desktop/modificaciones.pdf"));
+        String doc = getServletConfig().getServletContext().getRealPath ("/");
+        PdfReader reader = new PdfReader(doc+"\\vaciomodificaciones.pdf");
+        PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(doc+"\\modificaciones.pdf"));
         AcroFields form = stamper.getAcroFields();
         
         for(i = 1; i <=12; ++i){
@@ -47,7 +48,7 @@ public class pdf extends HttpServlet {
                 System.out.println("hdasg");
                 }
                 else
-                    ruta = "http://localhost:8080/SAMP/error.html";
+                    ruta = "http://localhost:8084/SAMP/error.html";
             }
         }
                     form.setField("text_"+Integer.toString(13),regimen);
