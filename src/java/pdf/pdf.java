@@ -22,30 +22,32 @@ public class pdf extends HttpServlet {
     Connection conx;
     Statement stm;
     ResultSet rs;
+    String nss;
     protected void cambios(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String nss = request.getParameter("nssm");
+        AcroFields form = null;
+        PdfReader reader = null;
+        PdfStamper stamper = null;
+        nss = request.getParameter("nssm");
         String regimen = request.getParameter("regimen");
-        //String nss = "12345vfggjh";
-        //String regimen = "1945";
-        int i = 1;
         String ruta = "http://localhost:8084/SAMP/impcamb.html";
         try{
         Class.forName("com.mysql.jdbc.Driver");
         conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","Andy94");
         stm = conx.createStatement();
-        String doc = getServletConfig().getServletContext().getRealPath ("/");
-        PdfReader reader = new PdfReader(doc+"\\vaciomodificaciones.pdf");
-        PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(doc+"\\modificaciones.pdf"));
-        AcroFields form = stamper.getAcroFields();
-        
-        for(i = 1; i <=12; ++i){
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.out.println("hue");
+        }
+        try{
+        for(int i = 1; i <=12; ++i){
             rs = stm.executeQuery("call modificaciones('"+nss+"')");
-            System.out.println("jkhadkjdska");
             if(rs.next()){
                 if(rs.getString(1) != null){
+                    String doc = getServletConfig().getServletContext().getRealPath ("/");
+                    reader = new PdfReader(doc+"\\vaciomodificaciones.pdf");
+                    stamper = new PdfStamper(reader, new FileOutputStream(doc+"\\modificaciones.pdf"));
+                    form = stamper.getAcroFields();
                     form.setField("text_"+Integer.toString(i),rs.getString(i));
-                System.out.println("hdasg");
                 }
                 else
                     ruta = "http://localhost:8084/SAMP/error.html";
@@ -61,7 +63,7 @@ public class pdf extends HttpServlet {
         conx.close();
         response.sendRedirect(ruta);
         }
-        catch (DocumentException | ClassNotFoundException | SQLException e){
+        catch (DocumentException | SQLException e){
             System.out.println(e.getMessage());
         }
     }
@@ -108,9 +110,8 @@ public class pdf extends HttpServlet {
             case "consultas":
                 consultas(request,response);
                 break;
-            case "altas":
-                break;
             case "extras":
+                //extras(request,response);
                 break;
             case "inicio":
                 inicio(request,response);
