@@ -25,41 +25,41 @@ public class pdf extends HttpServlet {
     String nss;
     protected void cambios(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        AcroFields form = null;
-        PdfReader reader = null;
-        PdfStamper stamper = null;
+        int i = 1;
         nss = request.getParameter("nssm");
         String regimen = request.getParameter("regimen");
-        String ruta = "http://localhost:8084/SAMP/impcamb.html";
+        String ruta = "http://localhost:8080/SAMP/impcamb.html";
         try{
         Class.forName("com.mysql.jdbc.Driver");
-        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","Andy94");
+        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","n0m3l0");
         stm = conx.createStatement();
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println("hue");
         }
         try{
-        for(int i = 1; i <=12; ++i){
+        String doc = getServletConfig().getServletContext().getRealPath ("/");
+        FileOutputStream fos = new FileOutputStream(doc+"modificaciones.pdf");
+        PdfReader reader = new PdfReader(doc+"vaciomodificaciones.pdf");
+        PdfStamper stamper = new PdfStamper(reader, fos);
+        AcroFields form = stamper.getAcroFields();
+        for(i = 1; i <=12; ++i){
             rs = stm.executeQuery("call modificaciones('"+nss+"')");
             if(rs.next()){
                 if(rs.getString(1) != null){
-                    String doc = getServletConfig().getServletContext().getRealPath ("/");
-                    reader = new PdfReader(doc+"\\vaciomodificaciones.pdf");
-                    stamper = new PdfStamper(reader, new FileOutputStream(doc+"\\modificaciones.pdf"));
-                    form = stamper.getAcroFields();
                     form.setField("text_"+Integer.toString(i),rs.getString(i));
                 }
                 else
                     ruta = "http://localhost:8084/SAMP/error.html";
             }
         }
-                    form.setField("text_"+Integer.toString(13),regimen);
-                    form.setField("text_"+Integer.toString(14),"124802M4~!4°M464N4617201500317");
-                    Date now = new Date();
-                    DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
-                    form.setField("text_"+Integer.toString(15),df.format(now));
+        form.setField("text_"+Integer.toString(13),regimen);
+        form.setField("text_"+Integer.toString(14),"124802M4~!4°M464N4617201500317");
+        Date now = new Date();
+        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        form.setField("text_"+Integer.toString(15),df.format(now));
         stamper.close();
         reader.close();
+        fos.close();
         conx.close();
         response.sendRedirect(ruta);
         }
