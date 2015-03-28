@@ -1,5 +1,8 @@
 create database samp;
 use samp;
+create table usuarios(
+usuario nvarchar(10),
+clave nvarchar(16));
 create table personas(
 nombrea nvarchar(75),
 folio nvarchar(8),
@@ -13,7 +16,10 @@ afore73 nvarchar(6),
 pensionm97 nvarchar(6),
 aguinaldo97 nvarchar(6),
 afore97 nvarchar(6));
+
 insert into personas values('Inocencio Gonzalez Perez',44625367,'Juan Perez Estrada','GFRA870404HCDAON03',12345678900,'Vejez,Cesantia,Viudez',75432,54635,76345,12939,93243,82735);
+insert into usuarios values('IMSS','huehuehue');
+
 delimiter //
 create procedure modificaciones(in nsss nvarchar(11))
 begin
@@ -26,6 +32,20 @@ begin
 	end if;
 end //
 delimiter ;
+delimiter //
+create procedure login(in user nvarchar(10),in pass nvarchar(10))
+	begin
+    declare existente int;
+	set existente = (select count(*) from usuarios where usuario=user and clave=pass);
+	if existente = 1 then
+		select * from usuarios where usuario=user and clave=pass;
+	else
+		select null as valido;
+	end if;
+end //
+delimiter ;
+
+
 delimiter //
 create procedure consultas(in nsss nvarchar(11))
 begin

@@ -17,24 +17,26 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 @WebServlet(name = "pdf", urlPatterns = {"/pdf"})
 public class pdf extends HttpServlet {
     Connection conx;
     Statement stm;
     ResultSet rs;
     String nss;
+    HttpSession sesion;
     protected void cambios(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int i = 1;
         nss = request.getParameter("nssm");
+        sesion = request.getSession(false);
         String regimen = request.getParameter("regimen");
-        String ruta = "http://localhost:8080/SAMP/impcamb.html";
         try{
         Class.forName("com.mysql.jdbc.Driver");
-        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","n0m3l0");
+        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","Andy94");
         stm = conx.createStatement();
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("hue");
+            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+            response.sendRedirect("http://localhost:8080/SAMP/error.jsp");
         }
         try{
         String doc = getServletConfig().getServletContext().getRealPath ("/");
@@ -42,14 +44,16 @@ public class pdf extends HttpServlet {
         PdfReader reader = new PdfReader(doc+"vaciomodificaciones.pdf");
         PdfStamper stamper = new PdfStamper(reader, fos);
         AcroFields form = stamper.getAcroFields();
-        for(i = 1; i <=12; ++i){
+        for(int i = 1; i <=12; ++i){
             rs = stm.executeQuery("call modificaciones('"+nss+"')");
             if(rs.next()){
                 if(rs.getString(1) != null){
                     form.setField("text_"+Integer.toString(i),rs.getString(i));
                 }
-                else
-                    ruta = "http://localhost:8084/SAMP/error.html";
+                else{
+                    sesion.setAttribute("Error", "NSS incorrecto");
+                    response.sendRedirect("http://localhost:8080/SAMP/error.jsp");
+                }
             }
         }
         form.setField("text_"+Integer.toString(13),regimen);
@@ -61,17 +65,16 @@ public class pdf extends HttpServlet {
         reader.close();
         fos.close();
         conx.close();
-        response.sendRedirect(ruta);
+        response.sendRedirect("http://localhost:8080/SAMP/impcamb.html");
         }
         catch (DocumentException | SQLException e){
-            System.out.println(e.getMessage());
+            sesion.setAttribute("Error", "Error desconocido en la aplicación");
+            response.sendRedirect("http://localhost:8080/SAMP/error.jsp");
         }
     }
     protected void consultas(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String nss = request.getParameter("nssc");
-        int i = 1;
-        String ruta = "http://localhost:8080/SAMP/impcons.html";
+        nss = request.getParameter("nssc");
         try{
         Class.forName("com.mysql.jdbc.Driver");
         conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","n0m3l0");
@@ -79,10 +82,9 @@ public class pdf extends HttpServlet {
         rs = stm.executeQuery("call consultas('"+nss+"')");
         if(rs.next()){
             if(rs.getString(1) == null)
-                ruta = "http://localhost:8080/SAMP/error.html";  
+                System.out.println("hue");
         }
         conx.close();
-        response.sendRedirect(ruta);
         }
         catch (ClassNotFoundException | SQLException e){
             System.out.println(e.getMessage());
@@ -92,11 +94,35 @@ public class pdf extends HttpServlet {
             throws ServletException, IOException {
         String user = request.getParameter("user");
         String pass = request.getParameter("pass");
-        String ruta = "http://localhost:8080/SAMP/menu.html";
-        if(!user.equals("IMSS") && !pass.equals("556")){
-            ruta = "http://localhost:8080/SAMP/index.html";
+        sesion = request.getSession(true);
+        try{
+        Class.forName("com.mysql.jdbc.Driver");
+        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","Andy94");
+        stm = conx.createStatement();
+        } catch (ClassNotFoundException | SQLException ex) {
+            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+            response.sendRedirect("http://localhost:8080/SAMP/error.jsp");
         }
-        response.sendRedirect(ruta);
+        try{
+        rs = stm.executeQuery("call login('"+user+"','"+pass+"')");
+        if(rs.next()){
+            if(rs.getString(1) != null){
+                sesion.setAttribute("usuario", rs.getString(1));
+                sesion.setAttribute("clave", rs.getString(2));
+                System.out.println(rs.getString(1));
+                System.out.println(rs.getString(2));
+                }
+            else{
+                    sesion.setAttribute("Error", "Usuario o clave incorrecto");
+                    response.sendRedirect("http://localhost:8080/SAMP/error.jsp");
+                }
+            }
+        }
+        catch(SQLException sqle){
+            sesion.setAttribute("Error", "Error desconocido en la aplicación");
+            response.sendRedirect("http://localhost:8080/SAMP/error.jsp");
+        }
+        response.sendRedirect("http://localhost:8080/SAMP/pensiones.jsp");
     }
     // <editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
