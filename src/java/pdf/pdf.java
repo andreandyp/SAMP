@@ -23,7 +23,7 @@ public class pdf extends HttpServlet {
     Connection conx;
     Statement stm;
     ResultSet rs;
-    String nss;
+    String nss,ruta = "http://localhost:8080/SAMP/error.jsp";
     HttpSession sesion;
     protected void cambios(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -36,7 +36,6 @@ public class pdf extends HttpServlet {
         stm = conx.createStatement();
         } catch (ClassNotFoundException | SQLException ex) {
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
-            response.sendRedirect("http://localhost:8080/SAMP/error.jsp");
         }
         try{
         String doc = getServletConfig().getServletContext().getRealPath ("/");
@@ -52,7 +51,6 @@ public class pdf extends HttpServlet {
                 }
                 else{
                     sesion.setAttribute("Error", "NSS incorrecto");
-                    response.sendRedirect("http://localhost:8080/SAMP/error.jsp");
                 }
             }
         }
@@ -65,11 +63,13 @@ public class pdf extends HttpServlet {
         reader.close();
         fos.close();
         conx.close();
-        response.sendRedirect("http://localhost:8080/SAMP/impcamb.html");
+        ruta = "http://localhost:8080/SAMP/hue.jsp";
         }
         catch (DocumentException | SQLException e){
             sesion.setAttribute("Error", "Error desconocido en la aplicación");
-            response.sendRedirect("http://localhost:8080/SAMP/error.jsp");
+        }
+        finally{
+            response.sendRedirect(ruta);
         }
     }
     protected void consultas(HttpServletRequest request, HttpServletResponse response)
@@ -95,13 +95,13 @@ public class pdf extends HttpServlet {
         String user = request.getParameter("user");
         String pass = request.getParameter("pass");
         sesion = request.getSession(true);
+        sesion.setMaxInactiveInterval(60*60*24);
         try{
         Class.forName("com.mysql.jdbc.Driver");
         conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","Andy94");
         stm = conx.createStatement();
         } catch (ClassNotFoundException | SQLException ex) {
-            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
-            response.sendRedirect("http://localhost:8080/SAMP/error.jsp");
+            System.out.println(ex.getMessage());
         }
         try{
         rs = stm.executeQuery("call login('"+user+"','"+pass+"')");
@@ -109,20 +109,25 @@ public class pdf extends HttpServlet {
             if(rs.getString(1) != null){
                 sesion.setAttribute("usuario", rs.getString(1));
                 sesion.setAttribute("clave", rs.getString(2));
-                System.out.println(rs.getString(1));
-                System.out.println(rs.getString(2));
+                ruta = "http://localhost:8080/SAMP/menu.jsp";
                 }
             else{
                     sesion.setAttribute("Error", "Usuario o clave incorrecto");
-                    response.sendRedirect("http://localhost:8080/SAMP/error.jsp");
                 }
             }
         }
         catch(SQLException sqle){
-            sesion.setAttribute("Error", "Error desconocido en la aplicación");
-            response.sendRedirect("http://localhost:8080/SAMP/error.jsp");
+            System.out.println(sqle.getMessage());
         }
-        response.sendRedirect("http://localhost:8080/SAMP/pensiones.jsp");
+        finally{
+            response.sendRedirect(ruta);
+        }
+    }
+    private void salir(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        sesion = request.getSession(false);
+        sesion.invalidate();
+        response.sendRedirect("http://localhost:8080/SAMP/index.html");
     }
     // <editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
@@ -142,6 +147,9 @@ public class pdf extends HttpServlet {
             case "inicio":
                 inicio(request,response);
                 break;
+            case "salir":
+                salir(request,response);
+                    break;
         }   
     }
     @Override
