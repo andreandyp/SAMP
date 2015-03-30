@@ -41,6 +41,7 @@ public class pdf extends HttpServlet {
         String doc = getServletConfig().getServletContext().getRealPath ("/");
         FileOutputStream fos = new FileOutputStream(doc+"modificaciones.pdf");
         PdfReader reader = new PdfReader(doc+"vaciomodificaciones.pdf");
+        PdfReader.unethicalreading = true;
         PdfStamper stamper = new PdfStamper(reader, fos);
         AcroFields form = stamper.getAcroFields();
         for(int i = 1; i <=12; ++i){
@@ -75,19 +76,44 @@ public class pdf extends HttpServlet {
     protected void consultas(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         nss = request.getParameter("nssc");
+        sesion = request.getSession(false);
         try{
         Class.forName("com.mysql.jdbc.Driver");
-        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","n0m3l0");
+        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","Andy94");
         stm = conx.createStatement();
-        rs = stm.executeQuery("call consultas('"+nss+"')");
-        if(rs.next()){
-            if(rs.getString(1) == null)
-                System.out.println("hue");
+        } catch (ClassNotFoundException | SQLException ex) {
+            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
         }
+        try{
+        String doc = getServletConfig().getServletContext().getRealPath ("/");
+        FileOutputStream fos = new FileOutputStream(doc+"consultas.pdf");
+        PdfReader reader = new PdfReader(doc+"vacioconsultas.pdf");
+        PdfReader.unethicalreading = true;
+        PdfStamper stamper = new PdfStamper(reader, fos);
+        AcroFields form = stamper.getAcroFields();
+
+        for(int i = 1; i <=10; ++i){
+            rs = stm.executeQuery("call consultas('"+nss+"')");
+            if(rs.next()){
+                if(rs.getString(1) != null){
+                    form.setField("text_"+Integer.toString(i),rs.getString(i));
+                }
+                else{
+                    sesion.setAttribute("Error", "NSS incorrecto");
+                }
+            }
+        }
+        stamper.close();
+        reader.close();
+        fos.close();
         conx.close();
+        ruta = "http://localhost:8080/SAMP/hue.jsp";
         }
-        catch (ClassNotFoundException | SQLException e){
-            System.out.println(e.getMessage());
+        catch (DocumentException | SQLException e){
+            sesion.setAttribute("Error", "Error desconocido en la aplicación");
+        }
+        finally{
+            response.sendRedirect(ruta);
         }
     }
     protected void inicio(HttpServletRequest request, HttpServletResponse response)
