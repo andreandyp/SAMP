@@ -25,6 +25,30 @@ public class pdf extends HttpServlet {
     ResultSet rs;
     String nss,ruta = "http://localhost:8080/SAMP/error.jsp";
     HttpSession sesion;
+    private void altas(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException{
+        String nombrea = request.getParameter("nombrea");
+        String nombres = request.getParameter("nombres");
+        String curp = request.getParameter("curp");
+        sesion = request.getSession(false);
+        try{
+        Class.forName("com.mysql.jdbc.Driver");
+        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","Andy94");
+        stm = conx.createStatement();
+        } catch (ClassNotFoundException | SQLException ex) {
+            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+        }
+        try{
+            stm.executeQuery("call altas('"+nombrea+"','"+nombres+"','"+curp+"')");
+        }
+        catch (SQLException e){
+            sesion.setAttribute("Error", "Error desconocido en la aplicación");
+        }
+        finally{
+            ruta = "http://localhost:8080/SAMP/exito.jsp";
+            response.sendRedirect(ruta);
+        }
+    }
     protected void cambios(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         nss = request.getParameter("nssm");
@@ -45,7 +69,7 @@ public class pdf extends HttpServlet {
         PdfStamper stamper = new PdfStamper(reader, fos);
         AcroFields form = stamper.getAcroFields();
         for(int i = 1; i <=12; ++i){
-            rs = stm.executeQuery("call modificaciones('"+nss+"')");
+            rs = stm.executeQuery("call modificaciones('"+nss+"','"+regimen+"')");
             if(rs.next()){
                 if(rs.getString(1) != null){
                     form.setField("text_"+Integer.toString(i),rs.getString(i));
@@ -64,7 +88,7 @@ public class pdf extends HttpServlet {
         reader.close();
         fos.close();
         conx.close();
-        ruta = "http://localhost:8080/SAMP/hue.jsp";
+        ruta = "http://localhost:8080/SAMP/exito.jsp";
         }
         catch (DocumentException | SQLException e){
             sesion.setAttribute("Error", "Error desconocido en la aplicación");
@@ -107,7 +131,7 @@ public class pdf extends HttpServlet {
         reader.close();
         fos.close();
         conx.close();
-        ruta = "http://localhost:8080/SAMP/hue.jsp";
+        ruta = "http://localhost:8080/SAMP/exito.jsp";
         }
         catch (DocumentException | SQLException e){
             sesion.setAttribute("Error", "Error desconocido en la aplicación");
@@ -161,6 +185,9 @@ public class pdf extends HttpServlet {
             throws ServletException, IOException {
         String m = request.getParameter("m");
         switch(m){
+            case "altas":
+                altas(request,response);
+                break;
             case "cambios":
                 cambios(request,response);
                 break;
@@ -175,7 +202,7 @@ public class pdf extends HttpServlet {
                 break;
             case "salir":
                 salir(request,response);
-                    break;
+                break;
         }   
     }
     @Override

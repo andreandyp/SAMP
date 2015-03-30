@@ -5,6 +5,16 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Apartado de pensiones</title>
+        <script type="text/javascript">
+            function validar(hue){
+            if(hue === null || hue.length !== 11){
+                alert("El NSS debe ser de 11 digitos");
+                return false;
+            }else{
+                return true;
+            }
+        }
+        </script>
     </head>
     <body>
         <%
@@ -16,33 +26,36 @@
         <h1>Escoge un apartado</h1>
         <div id="nuevo">
             <form method="post" action="pdf?m=altas">
-                
+                <input type="text" placeholder="Nombre del afiliado" name="nombrea"><br>
+                <input type="text" placeholder="Nombre del solicitante" name="nombres"><br>
+                <input type="text" placeholder="C.U.R.P" name="curp"><br>
+                <input type="submit" value="Enviar">
             </form>
         </div>
         <div id="modificaciones">
             <h1>Modificaciones</h1>
-            <form method="post" action="pdf?m=cambios">
-                <input type="text" placeholder="nss" name="nssm">
+            <form method="post" action="pdf?m=cambios" onsubmit="return validar(document.getElementById('nssm').value);">
+                <input type="text" placeholder="NSS" id="nssm" maxlength="11"><br>
                 <select name="regimen">
                     <option name="IMSS/1973">IMSS/1973</option>
                     <option name="Aseguradora/1997">Aseguradora/1997</option>
-                </select>
+                </select><br>
                 <input type="submit" value="Enviar">
             </form>
         </div>
         <div id="informacion">
             <h1>Informacion de pensionado</h1>
-            <form method="post" action="pdf?m=consultas">
-                <input type="text" placeholder="nss" name="nssc">
+            <form method="post" action="pdf?m=consultas" onsubmit="return validar(document.getElementById('nssc').value);">
+                <input type="text" placeholder="NSS" id="nssc" maxlength="11"><br>
                 <input type="submit" value="Enviar">
             </form>
         </div>
-        <div id="deshabilitar">
+        <!--<div id="deshabilitar">
             <h1>Deshabilitar pensionado (CUIDADO)</h1>
-            <form method="post" action="pdf?m=bajas">
-                <input type="text" placeholder="nss" name="nssc">
+            <form method="post" action="pdf?m=bajas" onsubmit="return validar(document.getElementById('nsse').value);">
+                <input type="text" placeholder="NSS" id="nsse" maxlength="11"><br>
                 <input type="submit" value="Enviar">
             </form>
-        </div>
+        </div>-->
     </body>
 </html>
