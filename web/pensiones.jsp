@@ -35,7 +35,7 @@
         <div id="modificaciones">
             <h1>Modificaciones</h1>
             <form method="post" action="pdf?m=cambios" onsubmit="return validar(document.getElementById('nssm').value);">
-                <input type="text" placeholder="NSS" id="nssm" maxlength="11"><br>
+                <input type="text" placeholder="NSS" id="nssm" name="nssm" maxlength="11"><br>
                 <select name="regimen">
                     <option name="IMSS/1973">IMSS/1973</option>
                     <option name="Aseguradora/1997">Aseguradora/1997</option>
@@ -46,7 +46,7 @@
         <div id="informacion">
             <h1>Informacion de pensionado</h1>
             <form method="post" action="pdf?m=consultas" onsubmit="return validar(document.getElementById('nssc').value);">
-                <input type="text" placeholder="NSS" id="nssc" maxlength="11"><br>
+                <input type="text" placeholder="NSS" id="nssc" name="nssc" maxlength="11"><br>
                 <input type="submit" value="Enviar">
             </form>
         </div>
