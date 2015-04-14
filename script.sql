@@ -86,6 +86,7 @@ begin
 	set existente = (select count(*) from personas where nss=nsss and activo=1);
 	if existente = 1 then
         update personas set activo = 0 where nss = nsss;
+        insert into deshabilitados(nombrea,nombres,curp,nss,regimen) select nombrea,nombres,curp,nss,regimen from personas where nss=nsss;
 	else
 		set existente = 0;
 	end if;

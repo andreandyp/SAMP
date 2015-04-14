@@ -97,6 +97,7 @@ public class pdf extends HttpServlet {
         catch (DocumentException | SQLException e){
             System.out.println(e.getMessage());
             sesion.setAttribute("Error", "Error desconocido en la aplicación");
+            ruta = "http://localhost:8080/SAMP/error.jsp";
         }
         finally{
             response.sendRedirect(ruta);
@@ -143,6 +144,7 @@ public class pdf extends HttpServlet {
         catch (DocumentException | SQLException e){
             System.out.println(e.getMessage());
             sesion.setAttribute("Error", "Error desconocido en la aplicación");
+            ruta = "http://localhost:8080/SAMP/error.jsp";
         }
         finally{
             response.sendRedirect(ruta);
@@ -185,7 +187,7 @@ public class pdf extends HttpServlet {
         throws ServletException, IOException {
         sesion = request.getSession(false);
         sesion.invalidate();
-        response.sendRedirect("http://localhost:8080/SAMP/index.html");
+        response.sendRedirect("http://localhost:8080/SAMP/");
     }
     private void bajas(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
@@ -199,7 +201,7 @@ public class pdf extends HttpServlet {
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
         }
         try {
-            rs = stm.executeQuery("call bajas('"+nss+"')");
+            stm.executeQuery("call bajas('"+nss+"')");
             sesion.setAttribute("Archivo",null);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
