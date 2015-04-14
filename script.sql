@@ -25,9 +25,10 @@ afore97 int(6),
 regimen int(4),
 activo tinyint(1));
 /*create user 'IMSS'@'localhost' identified by 'ClaveSecreta127';
-grant insert,select,update on samp.* to 'IMSS'@'localhost';
+grant insert,select,update,create temporary tables,execute on samp.* to 'IMSS'@'localhost';
 flush privileges;
-*/
+show grants for 'IMSS'@'localhost';*/
+
 insert into personas values('Inocencio Gonzalez Perez',44625367,'Juan Perez Estrada','GFRA870404HCDAON03',12345678900,'Vejez,Cesantia,Viudez',75432,54635,76345,12939,93243,82735,1993,1);
 insert into personas values('Basilio Hernandez Gutierrez',44625367,'Carlos Escobar del Monte','HGTA876540JNFTNS04',00987654321,'Vejez,Viudez',75432,54635,76345,12939,93243,82735,1997,1);
 insert into usuarios values('IMSS','huehuehue');

@@ -74,7 +74,6 @@ public class pdf extends HttpServlet {
             if(rs.next()){
                 if(rs.getString(1) != null){
                     form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
-                    System.out.println(rs.getString(i));
                 }
                 else{
                     sesion.setAttribute("Error", "NSS incorrecto");
@@ -93,6 +92,7 @@ public class pdf extends HttpServlet {
         ruta = "http://localhost:8080/SAMP/exito.jsp";
         }
         catch (DocumentException | SQLException e){
+            System.out.println(e.getMessage());
             sesion.setAttribute("Error", "Error desconocido en la aplicación");
         }
         finally{
@@ -107,7 +107,8 @@ public class pdf extends HttpServlet {
         Class.forName("com.mysql.jdbc.Driver");
         conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
         stm = conx.createStatement();
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println(e.getMessage());
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
         }
         try{
@@ -136,6 +137,7 @@ public class pdf extends HttpServlet {
         ruta = "http://localhost:8080/SAMP/exito.jsp";
         }
         catch (DocumentException | SQLException e){
+            System.out.println(e.getMessage());
             sesion.setAttribute("Error", "Error desconocido en la aplicación");
         }
         finally{
@@ -152,8 +154,8 @@ public class pdf extends HttpServlet {
         Class.forName("com.mysql.jdbc.Driver");
         conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
         stm = conx.createStatement();
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println(ex.getMessage());
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println(e.getMessage());
         }
         try{
         rs = stm.executeQuery("call login('"+user+"','"+pass+"')");

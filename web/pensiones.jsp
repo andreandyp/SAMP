@@ -37,8 +37,8 @@
             <form method="post" action="pdf?m=cambios" onsubmit="return validar(document.getElementById('nssm').value);">
                 <input type="text" placeholder="NSS" id="nssm" name="nssm" maxlength="11"><br>
                 <select name="regimen">
-                    <option name="IMSS/1973">IMSS/1973</option>
-                    <option name="Aseguradora/1997">Aseguradora/1997</option>
+                    <option value="1973">1973/IMSS</option>
+                    <option value="1997">1997/Aseguradora</option>
                 </select><br>
                 <input type="submit" value="Enviar">
             </form>

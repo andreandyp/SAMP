@@ -5,6 +5,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>¡Tramite exitoso!</title>
+        <script type="text/javascript">
+            function regresar() {
+                window.history.back();
+                }
+        </script>
     </head>
     <body>
         <h1>¡El tramite se realizo con exito!</h1>
