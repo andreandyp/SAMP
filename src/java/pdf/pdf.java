@@ -90,6 +90,7 @@ public class pdf extends HttpServlet {
         fos.close();
         conx.close();
         ruta = "http://localhost:8080/SAMP/exito.jsp";
+        sesion.setAttribute("Archivo", "modificaciones.pdf");
         }
         catch (DocumentException | SQLException e){
             System.out.println(e.getMessage());
@@ -135,6 +136,7 @@ public class pdf extends HttpServlet {
         fos.close();
         conx.close();
         ruta = "http://localhost:8080/SAMP/exito.jsp";
+        sesion.setAttribute("Archivo", "consultas.pdf");
         }
         catch (DocumentException | SQLException e){
             System.out.println(e.getMessage());
