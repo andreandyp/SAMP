@@ -16,6 +16,8 @@
             out.println("Posible causa:");
             HttpSession sesion = request.getSession(false);
             out.println(sesion.getAttribute("Error"));
+            out.println("<br>Error exacto:");
+            out.println(sesion.getAttribute("log"));
         %>
         <h1>Vuelve a intentarlo mas tarde o pulsa el boton para regresar</h1>
         <input type="button" value="Regresar" onclick="regresar()">

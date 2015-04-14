@@ -37,14 +37,16 @@ public class pdf extends HttpServlet {
         Class.forName("com.mysql.jdbc.Driver");
         conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
         stm = conx.createStatement();
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (ClassNotFoundException | SQLException e) {
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+            sesion.setAttribute("log", e.getMessage());
         }
         try{
             stm.executeQuery("call altas('"+nombrea+"','"+nombres+"','"+curp+"')");
         }
         catch (SQLException e){
             sesion.setAttribute("Error", "Error desconocido en la aplicación");
+            sesion.setAttribute("log", e.getMessage());
         }
         finally{
             ruta = "http://localhost:8080/SAMP/exito.jsp";
@@ -61,8 +63,9 @@ public class pdf extends HttpServlet {
         Class.forName("com.mysql.jdbc.Driver");
         conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
         stm = conx.createStatement();
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (ClassNotFoundException | SQLException e) {
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+            sesion.setAttribute("log", e.getMessage());
         }
         try{
         String doc = getServletConfig().getServletContext().getRealPath ("/");
@@ -74,12 +77,8 @@ public class pdf extends HttpServlet {
         for(int i = 1; i <=12; ++i){
             rs = stm.executeQuery("call modificaciones('"+nss+"','"+regimen+"')");
             if(rs.next()){
-                if(rs.getString(1) != null){
+                if(rs.getString(1) != null)
                     form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
-                }
-                else{
-                    sesion.setAttribute("Error", "NSS incorrecto");
-                }
             }
         }
         form.setField("text_"+Integer.toString(13),regimen);
@@ -95,8 +94,8 @@ public class pdf extends HttpServlet {
         sesion.setAttribute("Archivo", "modificaciones.pdf");
         }
         catch (DocumentException | SQLException e){
-            System.out.println(e.getMessage());
-            sesion.setAttribute("Error", "Error desconocido en la aplicación");
+            sesion.setAttribute("log", e.getMessage());
+            sesion.setAttribute("Error", "NSS incorrecto o usuario inexistente");
             ruta = "http://localhost:8080/SAMP/error.jsp";
         }
         finally{
@@ -112,7 +111,7 @@ public class pdf extends HttpServlet {
         conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
         stm = conx.createStatement();
         } catch (ClassNotFoundException | SQLException e) {
-            System.out.println(e.getMessage());
+            sesion.setAttribute("log", e.getMessage());
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
         }
         try{
@@ -126,12 +125,8 @@ public class pdf extends HttpServlet {
         for(int i = 1; i <=10; ++i){
             rs = stm.executeQuery("call consultas('"+nss+"')");
             if(rs.next()){
-                if(rs.getString(1) != null){
+                if(rs.getString(1) != null)
                     form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
-                }
-                else{
-                    sesion.setAttribute("Error", "NSS incorrecto");
-                }
             }
         }
         stamper.close();
@@ -142,8 +137,8 @@ public class pdf extends HttpServlet {
         sesion.setAttribute("Archivo", "consultas.pdf");
         }
         catch (DocumentException | SQLException e){
-            System.out.println(e.getMessage());
-            sesion.setAttribute("Error", "Error desconocido en la aplicación");
+            sesion.setAttribute("log", e.getMessage());
+            sesion.setAttribute("Error", "NSS incorrecto o usuario deshabilitado");
             ruta = "http://localhost:8080/SAMP/error.jsp";
         }
         finally{
@@ -161,7 +156,8 @@ public class pdf extends HttpServlet {
         conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
         stm = conx.createStatement();
         } catch (ClassNotFoundException | SQLException e) {
-            System.out.println(e.getMessage());
+            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+            sesion.setAttribute("log", e.getMessage());
         }
         try{
         rs = stm.executeQuery("call login('"+user+"','"+pass+"')");
@@ -176,8 +172,8 @@ public class pdf extends HttpServlet {
                 }
             }
         }
-        catch(SQLException sqle){
-            System.out.println(sqle.getMessage());
+        catch(SQLException e){
+            sesion.setAttribute("log", e.getMessage());
         }
         finally{
             response.sendRedirect(ruta);
@@ -197,14 +193,16 @@ public class pdf extends HttpServlet {
         Class.forName("com.mysql.jdbc.Driver");
         conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
         stm = conx.createStatement();
-        } catch (ClassNotFoundException | SQLException ex) {
+        } catch (ClassNotFoundException | SQLException e) {
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+            sesion.setAttribute("log", e.getMessage());
         }
         try {
             stm.executeQuery("call bajas('"+nss+"')");
             sesion.setAttribute("Archivo",null);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            sesion.setAttribute("Error", "Error desconocido en la aplicacion");
+            sesion.setAttribute("log", e.getMessage());
         }
         finally{
             ruta = "http://localhost:8080/SAMP/exito.jsp";
