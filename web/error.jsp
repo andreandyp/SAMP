@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Error!!</title>
+        <title>Error</title>
         <script type="text/javascript">
             function regresar() {
                 window.history.back();
@@ -12,14 +12,17 @@
     </head>
     <body>
         <h1>Ha ocurrido un error :(</h1>
+        <input type="button" value="Regresar" onclick="regresar()"><br><br>
         <%
-            out.println("Posible causa:");
             HttpSession sesion = request.getSession(false);
-            out.println(sesion.getAttribute("Error"));
-            out.println("<br>Error exacto:");
-            out.println(sesion.getAttribute("log"));
+            if(request.getParameter("error") != null)
+                out.println("Ya te vi. ¿Qué estas tramando? No eres un hacker, llegale");
+            else{
+                out.println("Posible causa:");
+                out.println(sesion.getAttribute("Error"));
+                out.println("<br>Error exacto:");
+                out.println(sesion.getAttribute("log"));
+            }
         %>
-        <h1>Vuelve a intentarlo mas tarde o pulsa el boton para regresar</h1>
-        <input type="button" value="Regresar" onclick="regresar()">
     </body>
 </html>

@@ -165,6 +165,7 @@ public class pdf extends HttpServlet {
             if(rs.getString(1) != null){
                 sesion.setAttribute("usuario", rs.getString(1));
                 sesion.setAttribute("clave", rs.getString(2));
+                sesion.setMaxInactiveInterval(1*24*60*60);
                 ruta = "http://localhost:8080/SAMP/menu.jsp";
                 }
             else{
@@ -182,6 +183,8 @@ public class pdf extends HttpServlet {
     private void salir(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
         sesion = request.getSession(false);
+        sesion.removeAttribute("usuario");
+        sesion.removeAttribute("clave");
         sesion.invalidate();
         response.sendRedirect("http://localhost:8080/SAMP/");
     }

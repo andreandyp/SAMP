@@ -19,9 +19,8 @@
     <body>
         <%
             HttpSession sesion = request.getSession(false);
-            if(sesion.getAttribute("usuario") == null){
-                response.sendRedirect("http://localhost:8080/SAMP/index.html");
-            }
+            if(sesion.getAttribute("usuario") == null || sesion.getAttribute("clave") == null)
+                response.sendRedirect("http://localhost:8080/SAMP/error.jsp?error=acceso");
         %>
         <h1>Escoge un apartado</h1>
         <div id="nuevo">
