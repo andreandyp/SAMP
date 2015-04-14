@@ -25,6 +25,7 @@
         %>
         <h1>Escoge un apartado</h1>
         <div id="nuevo">
+            <h1>Nuevo pensionado</h1>
             <form method="post" action="pdf?m=altas">
                 <input type="text" placeholder="Nombre del afiliado" name="nombrea"><br>
                 <input type="text" placeholder="Nombre del solicitante" name="nombres"><br>
@@ -50,12 +51,12 @@
                 <input type="submit" value="Enviar">
             </form>
         </div>
-        <!--<div id="deshabilitar">
+        <div id="deshabilitar">
             <h1>Deshabilitar pensionado (CUIDADO)</h1>
             <form method="post" action="pdf?m=bajas" onsubmit="return validar(document.getElementById('nsse').value);">
-                <input type="text" placeholder="NSS" id="nsse" maxlength="11"><br>
+                <input type="text" placeholder="NSS" id="nsse" name="nsse" maxlength="11"><br>
                 <input type="submit" value="Enviar">
             </form>
-        </div>-->
+        </div>
     </body>
 </html>

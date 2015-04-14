@@ -12,10 +12,11 @@
         </script>
     </head>
     <body>
-        <%HttpSession sesion = request.getSession(false);%>
         <h1>¡El tramite se realizo con exito!</h1>
         <input type="button" value="Click para regresar" onclick="regresar()"><br>
         <%
+        HttpSession sesion = request.getSession(false);
+        if(sesion.getAttribute("Archivo") != null)
         out.println("<a href=\"http://localhost:8080/SAMP/"+sesion.getAttribute("Archivo")+"\">Descargar el archivo</a>");
         %>
     </body>

@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -185,6 +187,28 @@ public class pdf extends HttpServlet {
         sesion.invalidate();
         response.sendRedirect("http://localhost:8080/SAMP/index.html");
     }
+    private void bajas(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        nss = request.getParameter("nsse");
+        sesion = request.getSession(false);
+        try{
+        Class.forName("com.mysql.jdbc.Driver");
+        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
+        stm = conx.createStatement();
+        } catch (ClassNotFoundException | SQLException ex) {
+            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+        }
+        try {
+            rs = stm.executeQuery("call bajas('"+nss+"')");
+            sesion.setAttribute("Archivo",null);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        finally{
+            ruta = "http://localhost:8080/SAMP/exito.jsp";
+            response.sendRedirect(ruta);
+        }
+    }
     // <editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -199,6 +223,9 @@ public class pdf extends HttpServlet {
                 break;
             case "consultas":
                 consultas(request,response);
+                break;
+            case "bajas":
+                bajas(request,response);
                 break;
             case "extras":
                 //extras(request,response);

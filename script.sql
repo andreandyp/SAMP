@@ -81,8 +81,13 @@ create procedure altas(in nombreaa nvarchar(75),in nombress nvarchar(75),in curp
 delimiter ;
 delimiter //
 create procedure bajas(in nsss bigint(11))
-	begin
-		update personas set activo=0 where nss = nsss;
-        insert into deshabilitados values((select nombrea,nombres,curp,nss,regimen from personas));
-	end //
+begin
+	declare existente int;
+	set existente = (select count(*) from personas where nss=nsss and activo=1);
+	if existente = 1 then
+        update personas set activo = 0 where nss = nsss;
+	else
+		set existente = 0;
+	end if;
+end //
 delimiter ;
