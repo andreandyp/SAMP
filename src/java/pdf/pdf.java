@@ -33,7 +33,7 @@ public class pdf extends HttpServlet {
         sesion = request.getSession(false);
         try{
         Class.forName("com.mysql.jdbc.Driver");
-        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","Andy94");
+        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
         stm = conx.createStatement();
         } catch (ClassNotFoundException | SQLException ex) {
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
@@ -51,12 +51,13 @@ public class pdf extends HttpServlet {
     }
     protected void cambios(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String regimen;
         nss = request.getParameter("nssm");
         sesion = request.getSession(false);
-        String regimen = request.getParameter("regimen");
+        regimen = request.getParameter("regimen");
         try{
         Class.forName("com.mysql.jdbc.Driver");
-        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","Andy94");
+        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
         stm = conx.createStatement();
         } catch (ClassNotFoundException | SQLException ex) {
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
@@ -72,7 +73,8 @@ public class pdf extends HttpServlet {
             rs = stm.executeQuery("call modificaciones('"+nss+"','"+regimen+"')");
             if(rs.next()){
                 if(rs.getString(1) != null){
-                    form.setField("text_"+Integer.toString(i),rs.getString(i));
+                    form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
+                    System.out.println(rs.getString(i));
                 }
                 else{
                     sesion.setAttribute("Error", "NSS incorrecto");
@@ -103,7 +105,7 @@ public class pdf extends HttpServlet {
         sesion = request.getSession(false);
         try{
         Class.forName("com.mysql.jdbc.Driver");
-        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","Andy94");
+        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
         stm = conx.createStatement();
         } catch (ClassNotFoundException | SQLException ex) {
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
@@ -120,7 +122,7 @@ public class pdf extends HttpServlet {
             rs = stm.executeQuery("call consultas('"+nss+"')");
             if(rs.next()){
                 if(rs.getString(1) != null){
-                    form.setField("text_"+Integer.toString(i),rs.getString(i));
+                    form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
                 }
                 else{
                     sesion.setAttribute("Error", "NSS incorrecto");
@@ -148,7 +150,7 @@ public class pdf extends HttpServlet {
         sesion.setMaxInactiveInterval(60*60*24);
         try{
         Class.forName("com.mysql.jdbc.Driver");
-        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","root","Andy94");
+        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
         stm = conx.createStatement();
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println(ex.getMessage());
