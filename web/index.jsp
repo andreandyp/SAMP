@@ -1,9 +1,3 @@
-<%-- 
-    Document   : index
-    Created on : 14-abr-2015, 20:28:08
-    Author     : Andy
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -20,23 +14,21 @@
                 response.sendRedirect("http://localhost:8080/SAMP/menu.jsp");
         %>
         <header class="header2">
-		<div class="wrapper">
-			<div class="logo">				
-				<img src="logosamp.png" style="height: 100px; position: absolute;">	
-                                <img src="logoimsst.png" style="height: 100px; position: absolute; right: 200px;">
-			</div>
-		</div>
-	</header>
-
-	<section class="Contenido wrapper">
-            <h3 style="text-align: center;">Bienvenido</h3>
-		<div class="formulario">
-			<form name="login" id="login" action="pdf?m=inicio" method="post">
-				<input type="text" name="user" id="user" class="campoTexto" placeholder="Usuario" onkeypress="return alfas(event)" required /><br>                             
-				<input type="password" name="pass" id="pass" class="campoTexto"  placeholder="Contraseña" onkeypress ="return soloalfas(event)" required /><br>
-                                <input type="submit" name="Entrar" value="Entrar">
-			</form>
-		</div>
-	</section>
+            <div class="wrapper">
+                <div class="logo">				
+                    <img src="logosamp.png" style="height: 100px; position: absolute;">	
+                    <img src="logoimsst.png" style="height: 100px; position: absolute; right: 200px;">
+                </div>
+            </div>
+        </header>
+        <section class="Contenido wrapper">
+            <div class="formulario">
+                <form name="login" id="login" action="pdf?m=inicio" method="post">
+                    <input type="text" name="user" id="user" class="campoTexto" placeholder="Usuario" required /><br>                             
+                    <input type="password" name="pass" id="pass" class="campoTexto"  placeholder="Contraseña" required /><br>
+                    <input type="submit" name="Entrar" value="Entrar">
+                </form>
+            </div>
+        </section>
     </body>
 </html>
