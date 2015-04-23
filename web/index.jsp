@@ -11,7 +11,7 @@
         <%
             HttpSession sesion = request.getSession(false);
             if(sesion.getAttribute("usuario") != null || sesion.getAttribute("clave") != null)
-                response.sendRedirect("http://localhost:8080/SAMP/menu.jsp");
+                response.sendRedirect("/SAMP/menu.jsp");
         %>
         <header class="header2">
             <div class="wrapper">

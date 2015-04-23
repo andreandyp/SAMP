@@ -15,13 +15,13 @@
         <%
             HttpSession sesion = request.getSession(false);
             if(sesion.getAttribute("usuario") == null || sesion.getAttribute("clave") == null)
-                response.sendRedirect("http://localhost:8080/SAMP/error.jsp?error=acceso");
+                response.sendRedirect("/SAMP/error.jsp?error=acceso");
         %>
         <h1>¡El tramite se realizo con exito!</h1>
         <input type="button" value="Click para regresar" onclick="regresar()"><br>
         <%
         if(sesion.getAttribute("Archivo") != null)
-        out.println("<a href=\"http://localhost:8080/SAMP/"+sesion.getAttribute("Archivo")+"\">Descargar el archivo</a>");
+        out.println("<a href=\"/SAMP/"+sesion.getAttribute("Archivo")+"\">Descargar el archivo</a>");
         %>
     </body>
 </html>

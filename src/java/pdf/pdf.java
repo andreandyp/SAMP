@@ -25,7 +25,7 @@ public class pdf extends HttpServlet {
     Connection conx;
     Statement stm;
     ResultSet rs;
-    String nss,ruta = "http://localhost:8080/SAMP/error.jsp";
+    String nss,ruta = "/SAMP/error.jsp";
     HttpSession sesion;
     private void altas(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException{
@@ -49,7 +49,7 @@ public class pdf extends HttpServlet {
             sesion.setAttribute("log", e.getMessage());
         }
         finally{
-            ruta = "http://localhost:8080/SAMP/exito.jsp";
+            ruta = "/SAMP/exito.jsp";
             response.sendRedirect(ruta);
         }
     }
@@ -90,13 +90,13 @@ public class pdf extends HttpServlet {
         reader.close();
         fos.close();
         conx.close();
-        ruta = "http://localhost:8080/SAMP/exito.jsp";
+        ruta = "/SAMP/exito.jsp";
         sesion.setAttribute("Archivo", "modificaciones.pdf");
         }
         catch (DocumentException | SQLException e){
             sesion.setAttribute("log", e.getMessage());
             sesion.setAttribute("Error", "NSS incorrecto o usuario inexistente");
-            ruta = "http://localhost:8080/SAMP/error.jsp";
+            ruta = "/SAMP/error.jsp";
         }
         finally{
             response.sendRedirect(ruta);
@@ -133,13 +133,13 @@ public class pdf extends HttpServlet {
         reader.close();
         fos.close();
         conx.close();
-        ruta = "http://localhost:8080/SAMP/exito.jsp";
+        ruta = "/SAMP/exito.jsp";
         sesion.setAttribute("Archivo", "consultas.pdf");
         }
         catch (DocumentException | SQLException e){
             sesion.setAttribute("log", e.getMessage());
             sesion.setAttribute("Error", "NSS incorrecto o usuario deshabilitado");
-            ruta = "http://localhost:8080/SAMP/error.jsp";
+            ruta = "/SAMP/error.jsp";
         }
         finally{
             response.sendRedirect(ruta);
@@ -166,7 +166,7 @@ public class pdf extends HttpServlet {
                 sesion.setAttribute("usuario", rs.getString(1));
                 sesion.setAttribute("clave", rs.getString(2));
                 sesion.setMaxInactiveInterval(1*24*60*60);
-                ruta = "http://localhost:8080/SAMP/menu.jsp";
+                ruta = "/SAMP/menu.jsp";
                 }
             else{
                     sesion.setAttribute("Error", "Usuario o clave incorrecto");
@@ -177,6 +177,7 @@ public class pdf extends HttpServlet {
             sesion.setAttribute("log", e.getMessage());
         }
         finally{
+            
             response.sendRedirect(ruta);
         }
     }
@@ -186,7 +187,7 @@ public class pdf extends HttpServlet {
         sesion.removeAttribute("usuario");
         sesion.removeAttribute("clave");
         sesion.invalidate();
-        response.sendRedirect("http://localhost:8080/SAMP/");
+        response.sendRedirect("/SAMP/");
     }
     private void bajas(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
@@ -208,7 +209,7 @@ public class pdf extends HttpServlet {
             sesion.setAttribute("log", e.getMessage());
         }
         finally{
-            ruta = "http://localhost:8080/SAMP/exito.jsp";
+            ruta = "/SAMP/exito.jsp";
             response.sendRedirect(ruta);
         }
     }
