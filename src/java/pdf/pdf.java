@@ -82,7 +82,7 @@ public class pdf extends HttpServlet {
             }
         }
         form.setField("text_"+Integer.toString(13),regimen);
-        form.setField("text_"+Integer.toString(14),"124802M4~!4°M464N4617201500317");
+        form.setField("text_"+Integer.toString(14),usuario.cifrado());
         Date now = new Date();
         DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
         form.setField("text_"+Integer.toString(15),df.format(now));
