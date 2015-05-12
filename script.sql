@@ -2,7 +2,9 @@ create database samp;
 use samp;
 create table usuarios(
 usuario nvarchar(10),
-clave nvarchar(16));
+clave nvarchar(16),
+delegacion int(2),
+subdelegacion int(3));
 create table deshabilitados(
 nombrea nvarchar(75),
 nombres nvarchar(75),
@@ -31,9 +33,9 @@ show grants for 'IMSS'@'localhost';*/
 
 insert into personas values('Inocencio Gonzalez Perez',44625367,'Juan Perez Estrada','GFRA870404HCDAON03',12345678900,'Vejez,Cesantia,Viudez',75432,54635,76345,12939,93243,82735,1993,1);
 insert into personas values('Basilio Hernandez Gutierrez',44625367,'Carlos Escobar del Monte','HGTA876540JNFTNS04',00987654321,'Vejez,Viudez',75432,54635,76345,12939,93243,82735,1997,1);
-insert into usuarios values('IMSS','huehuehue');
+insert into usuarios values('IMSS','huehuehue',56,023);
 delimiter //
-create procedure login(in user nvarchar(10),in pass nvarchar(10))
+create procedure sesion(in user nvarchar(10),in pass nvarchar(10))
 	begin
     declare existente int;
 	set existente = (select count(*) from usuarios where usuario=user and clave=pass);

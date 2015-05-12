@@ -25,7 +25,7 @@ public class pdf extends HttpServlet {
     Connection conx;
     Statement stm;
     ResultSet rs;
-    String nss,ruta = "/SAMP/error.jsp";
+    String nss,ruta = "/SAMP/error.jsp",usuario,delegacion,subdelegacion;
     HttpSession sesion;
     private void altas(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException{
@@ -55,10 +55,14 @@ public class pdf extends HttpServlet {
     }
     protected void cambios(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String regimen;
+        String regimen,u,d,s;
+        usuario usu = new usuario();
         nss = request.getParameter("nssm");
         sesion = request.getSession(false);
         regimen = request.getParameter("regimen");
+        u = request.getParameter("usuario");
+        d = request.getParameter("delegacion");
+        s = request.getParameter("delegacion");
         try{
         Class.forName("com.mysql.jdbc.Driver");
         conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
@@ -82,7 +86,7 @@ public class pdf extends HttpServlet {
             }
         }
         form.setField("text_"+Integer.toString(13),regimen);
-        form.setField("text_"+Integer.toString(14),usuario.cifrado());
+        form.setField("text_"+Integer.toString(14),usu.cifrado(u,s,d));
         Date now = new Date();
         DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
         form.setField("text_"+Integer.toString(15),df.format(now));
@@ -165,6 +169,8 @@ public class pdf extends HttpServlet {
             if(rs.getString(1) != null){
                 sesion.setAttribute("usuario", rs.getString(1));
                 sesion.setAttribute("clave", rs.getString(2));
+                sesion.setAttribute("delegacion", rs.getString(3));
+                sesion.setAttribute("subdelegacion", rs.getString(4));
                 sesion.setMaxInactiveInterval(1*24*60*60);
                 ruta = "/SAMP/menu.jsp";
                 }
