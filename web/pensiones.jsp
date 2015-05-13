@@ -6,14 +6,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Apartado de pensiones</title>
         <script type="text/javascript">
-            function validar(hue){
-            if(hue === null || hue.length !== 11){
-                alert("El NSS debe ser de 11 digitos");
-                return false;
-            }else{
-                return true;
-            }
-        }
+            
         </script>
     </head>
     <body>
@@ -35,7 +28,8 @@
         <div id="modificaciones">
             <h1>Modificaciones</h1>
             <form method="post" action="pdf?m=cambios" onsubmit="return validar(document.getElementById('nssm').value);">
-                <input type="text" placeholder="NSS" id="nssm" name="nssm" maxlength="11"><br>
+                <input type="text" placeholder="NSS" id="nssm" name="nssm" maxlength="10" onkeyup="digito()">
+                <input type="text" placeholder="digito" id="digito" maxlength="1"><br>
                 <select name="regimen">
                     <option value="1973">1973/IMSS</option>
                     <option value="1997">1997/Aseguradora</option>
@@ -46,14 +40,16 @@
         <div id="informacion">
             <h1>Informacion de pensionado</h1>
             <form method="post" action="pdf?m=consultas" onsubmit="return validar(document.getElementById('nssc').value);">
-                <input type="text" placeholder="NSS" id="nssc" name="nssc" maxlength="11"><br>
+                <input type="text" placeholder="NSS" id="nssc" name="nssc" maxlength="10" onkeyup="digito()">
+                <input type="text" placeholder="digito" id="digito" maxlength="1"><br>
                 <input type="submit" value="Enviar">
             </form>
         </div>
         <div id="deshabilitar">
             <h1>Deshabilitar pensionado (CUIDADO)</h1>
             <form method="post" action="pdf?m=bajas" onsubmit="return validar(document.getElementById('nsse').value);">
-                <input type="text" placeholder="NSS" id="nsse" name="nsse" maxlength="11"><br>
+                <input type="text" placeholder="NSS" id="nsse" name="nsse" maxlength="10" onkeyup="digito()">
+                <input type="text" placeholder="digito" id="digito" maxlength="1"><br>
                 <input type="submit" value="Enviar">
             </form>
         </div>

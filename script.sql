@@ -4,19 +4,20 @@ create table usuarios(
 usuario nvarchar(10),
 clave nvarchar(16),
 delegacion int(2),
-subdelegacion int(3));
+subdelegacion int(3),
+permisos nvarchar(10));
 create table deshabilitados(
 nombrea nvarchar(75),
 nombres nvarchar(75),
 curp nvarchar(18),
-nss bigint(11),
+nss bigint(10),
 regimen int(4));
 create table personas(
 nombrea nvarchar(75),
 folio int(8),
 nombres nvarchar(75),
 curp nvarchar(18),
-nss bigint(11),
+nss bigint(10),
 pension nvarchar(100),
 pensionm73 int(6),
 aguinaldo73 int(6),
@@ -31,9 +32,9 @@ grant insert,select,update,create temporary tables,execute on samp.* to 'IMSS'@'
 flush privileges;
 show grants for 'IMSS'@'localhost';*/
 
-insert into personas values('Inocencio Gonzalez Perez',44625367,'Juan Perez Estrada','GFRA870404HCDAON03',12345678900,'Vejez,Cesantia,Viudez',75432,54635,76345,12939,93243,82735,1993,1);
-insert into personas values('Basilio Hernandez Gutierrez',44625367,'Carlos Escobar del Monte','HGTA876540JNFTNS04',00987654321,'Vejez,Viudez',75432,54635,76345,12939,93243,82735,1997,1);
-insert into usuarios values('IMSS','huehuehue',56,023);
+insert into personas values('Inocencio Gonzalez Perez',44625367,'Juan Perez Estrada','GFRA870404HCDAON03',1234567890,'Vejez,Cesantia,Viudez',75432,54635,76345,12939,93243,82735,1993,1);
+insert into personas values('Basilio Hernandez Gutierrez',44625367,'Carlos Escobar del Monte','HGTA876540JNFTNS04',0987654321,'Vejez,Viudez',75432,54635,76345,12939,93243,82735,1997,1);
+insert into usuarios values('IMSS','huehuehue',56,023,'1234567890');
 delimiter //
 create procedure sesion(in user nvarchar(10),in pass nvarchar(10))
 	begin
@@ -47,7 +48,7 @@ create procedure sesion(in user nvarchar(10),in pass nvarchar(10))
 end //
 delimiter ;
 delimiter //
-create procedure modificaciones(in nsss bigint(11),in regimenn int(4))
+create procedure modificaciones(in nsss bigint(10),in regimenn int(4))
 begin
 	declare existente int;
 	set existente = (select count(*) from personas where nss=nsss and activo=1);
@@ -60,7 +61,7 @@ begin
 end //
 delimiter ;
 delimiter //
-create procedure consultas(in nsss bigint(11))
+create procedure consultas(in nsss bigint(10))
 begin
 	declare existente int;
 	set existente = (select count(*) from personas where nss=nsss and activo=1);
@@ -82,7 +83,7 @@ create procedure altas(in nombreaa nvarchar(75),in nombress nvarchar(75),in curp
 	end //
 delimiter ;
 delimiter //
-create procedure bajas(in nsss bigint(11))
+create procedure bajas(in nsss bigint(10))
 begin
 	declare existente int;
 	set existente = (select count(*) from personas where nss=nsss and activo=1);

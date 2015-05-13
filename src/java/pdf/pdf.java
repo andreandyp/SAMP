@@ -12,8 +12,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -53,10 +51,9 @@ public class pdf extends HttpServlet {
             response.sendRedirect(ruta);
         }
     }
-    protected void cambios(HttpServletRequest request, HttpServletResponse response)
+    private void cambios(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String regimen,u,d,s;
-        usuario usu = new usuario();
         nss = request.getParameter("nssm");
         sesion = request.getSession(false);
         regimen = request.getParameter("regimen");
@@ -73,8 +70,8 @@ public class pdf extends HttpServlet {
         }
         try{
         String doc = getServletConfig().getServletContext().getRealPath ("/");
-        FileOutputStream fos = new FileOutputStream(doc+"modificaciones.pdf");
-        PdfReader reader = new PdfReader(doc+"vaciomodificaciones.pdf");
+        FileOutputStream fos = new FileOutputStream(doc+"extras/modificaciones.pdf");
+        PdfReader reader = new PdfReader(doc+"extras/vaciomodificaciones.pdf");
         PdfReader.unethicalreading = true;
         PdfStamper stamper = new PdfStamper(reader, fos);
         AcroFields form = stamper.getAcroFields();
@@ -86,6 +83,7 @@ public class pdf extends HttpServlet {
             }
         }
         form.setField("text_"+Integer.toString(13),regimen);
+        usuario usu = new usuario();
         form.setField("text_"+Integer.toString(14),usu.cifrado(u,s,d));
         Date now = new Date();
         DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
@@ -95,7 +93,7 @@ public class pdf extends HttpServlet {
         fos.close();
         conx.close();
         ruta = "/SAMP/exito.jsp";
-        sesion.setAttribute("Archivo", "modificaciones.pdf");
+        sesion.setAttribute("Archivo", "extras/modificaciones.pdf");
         }
         catch (DocumentException | SQLException e){
             sesion.setAttribute("log", e.getMessage());
@@ -106,7 +104,7 @@ public class pdf extends HttpServlet {
             response.sendRedirect(ruta);
         }
     }
-    protected void consultas(HttpServletRequest request, HttpServletResponse response)
+    private void consultas(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         nss = request.getParameter("nssc");
         sesion = request.getSession(false);
@@ -120,8 +118,8 @@ public class pdf extends HttpServlet {
         }
         try{
         String doc = getServletConfig().getServletContext().getRealPath ("/");
-        FileOutputStream fos = new FileOutputStream(doc+"consultas.pdf");
-        PdfReader reader = new PdfReader(doc+"vacioconsultas.pdf");
+        FileOutputStream fos = new FileOutputStream(doc+"extras/consultas.pdf");
+        PdfReader reader = new PdfReader(doc+"extras/vacioconsultas.pdf");
         PdfReader.unethicalreading = true;
         PdfStamper stamper = new PdfStamper(reader, fos);
         AcroFields form = stamper.getAcroFields();
@@ -138,7 +136,7 @@ public class pdf extends HttpServlet {
         fos.close();
         conx.close();
         ruta = "/SAMP/exito.jsp";
-        sesion.setAttribute("Archivo", "consultas.pdf");
+        sesion.setAttribute("Archivo", "extras/consultas.pdf");
         }
         catch (DocumentException | SQLException e){
             sesion.setAttribute("log", e.getMessage());
@@ -149,7 +147,7 @@ public class pdf extends HttpServlet {
             response.sendRedirect(ruta);
         }
     }
-    protected void inicio(HttpServletRequest request, HttpServletResponse response)
+    private void inicio(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String user = request.getParameter("user");
         String pass = request.getParameter("pass");

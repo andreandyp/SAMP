@@ -1,7 +1,7 @@
 package pdf;
 import java.util.Calendar;
 public class usuario {
-    public static String cifrado(String usu,String delegacion,String subdelegacion){
+    protected String cifrado(String usu,String delegacion,String subdelegacion){
         String huella = "",hora = "0";
         Calendar fecha = Calendar.getInstance();
         if(fecha.get(Calendar.HOUR_OF_DAY) < 10)
