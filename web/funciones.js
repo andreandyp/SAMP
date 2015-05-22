@@ -1,5 +1,5 @@
 function digito(){
-    var nssn = "",nt,valor,hue = 0;
+    nssn = "",nt,valor,hue = 0;
     valor = document.getElementById('nss').value;
     if(valor.length === 10){
         for(var i = 1; i <= 10; i++){
@@ -26,10 +26,19 @@ function digito(){
         document.getElementById('digito').value = nssn;
     }
 }
-function validar(hue){
-    if(hue === null || hue.length !== 10){
-        alert("El NSS debe ser de 10 digitos");
+function validar(){
+    hue = document.getElementById('nss').value;
+    jue = document.getElementById('m').value;
+    if(hue === null || hue.length !== 10 || jue === "nada"){
+        alert("El NSS debe ser de 10 digitos y debes escoger un tramite");
         return false;
     }else
         return true;
+}
+function select(){
+    opcion = document.getElementById('m').value;
+    if(opcion === "Escoge una opcion")
+        document.getElementById("regimen").style.display = "block";
+    else
+        document.getElementById("regimen").style.display = "none";
 }

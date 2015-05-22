@@ -25,32 +25,6 @@ public class pdf extends HttpServlet {
     ResultSet rs;
     String nss,ruta = "/SAMP/error.jsp",usuario,delegacion,subdelegacion;
     HttpSession sesion;
-    private void altas(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException{
-        String nombrea = request.getParameter("nombrea");
-        String nombres = request.getParameter("nombres");
-        String curp = request.getParameter("curp");
-        sesion = request.getSession(false);
-        try{
-        Class.forName("com.mysql.jdbc.Driver");
-        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
-        stm = conx.createStatement();
-        } catch (ClassNotFoundException | SQLException e) {
-            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
-            sesion.setAttribute("log", e.getMessage());
-        }
-        try{
-            stm.executeQuery("call altas('"+nombrea+"','"+nombres+"','"+curp+"')");
-        }
-        catch (SQLException e){
-            sesion.setAttribute("Error", "Error desconocido en la aplicación");
-            sesion.setAttribute("log", e.getMessage());
-        }
-        finally{
-            ruta = "/SAMP/exito.jsp";
-            response.sendRedirect(ruta);
-        }
-    }
     private void cambios(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String regimen,u,d,s;
@@ -162,7 +136,7 @@ public class pdf extends HttpServlet {
             sesion.setAttribute("log", e.getMessage());
         }
         try{
-        rs = stm.executeQuery("call login('"+user+"','"+pass+"')");
+        rs = stm.executeQuery("call sesion('"+user+"','"+pass+"')");
         if(rs.next()){
             if(rs.getString(1) != null){
                 sesion.setAttribute("usuario", rs.getString(1));
@@ -223,9 +197,6 @@ public class pdf extends HttpServlet {
             throws ServletException, IOException {
         String m = request.getParameter("m");
         switch(m){
-            case "altas":
-                altas(request,response);
-                break;
             case "cambios":
                 cambios(request,response);
                 break;
@@ -243,6 +214,9 @@ public class pdf extends HttpServlet {
                 break;
             case "salir":
                 salir(request,response);
+                break;
+            default:
+                response.sendRedirect(ruta);
                 break;
         }   
     }
