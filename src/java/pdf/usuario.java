@@ -11,7 +11,7 @@ public class usuario {
         huella = huella.concat(hora);
         huella = huella.concat(Integer.toString(fecha.get(Calendar.MINUTE)));
         huella = huella.concat(Integer.toString(fecha.get(Calendar.MONTH) + 1));
-        for(int i = 0; i <= usu.length() - 1; i++){
+        for(int i = 0; i <= usu.length() -1; i++){
             switch(usu.charAt(i)){
                 case 'A':
                     huella = huella.concat("4");
@@ -82,7 +82,10 @@ public class usuario {
         huella = huella.concat(Integer.toString(fecha.get(Calendar.YEAR)));
         huella = huella.concat(subdelegacion);
         huella = huella.concat(Integer.toString(fecha.get(Calendar.DAY_OF_MONTH)));
-        System.out.println(huella);
         return huella;
     }
+    /*public static void main(String...x){
+        usuario u = new usuario();
+        System.out.println(u.cifrado("IMSS", "56", "023"));
+    }*/
 }

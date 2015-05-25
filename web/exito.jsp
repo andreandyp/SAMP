@@ -21,7 +21,7 @@
         <input type="button" value="Click para regresar" onclick="regresar()"><br>
         <%
         if(sesion.getAttribute("Archivo") != null)
-            out.println("<a href=\"/SAMP/extras/"+sesion.getAttribute("Archivo")+"\">Descargar el archivo</a>");
+            out.println("<a href=\"/SAMP/"+sesion.getAttribute("Archivo")+"\">Descargar el archivo</a>");
         %>
     </body>
 </html>

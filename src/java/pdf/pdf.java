@@ -28,12 +28,12 @@ public class pdf extends HttpServlet {
     private void cambios(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String regimen,u,d,s;
-        nss = request.getParameter("nssm");
+        nss = request.getParameter("nss");
         sesion = request.getSession(false);
         regimen = request.getParameter("regimen");
-        u = request.getParameter("usuario");
-        d = request.getParameter("delegacion");
-        s = request.getParameter("delegacion");
+        u = sesion.getAttribute("usuario").toString();
+        d = sesion.getAttribute("delegacion").toString();
+        s = sesion.getAttribute("subdelegacion").toString();
         try{
         Class.forName("com.mysql.jdbc.Driver");
         conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
@@ -80,7 +80,7 @@ public class pdf extends HttpServlet {
     }
     private void consultas(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        nss = request.getParameter("nssc");
+        nss = request.getParameter("nss");
         sesion = request.getSession(false);
         try{
         Class.forName("com.mysql.jdbc.Driver");
@@ -169,7 +169,7 @@ public class pdf extends HttpServlet {
     }
     private void bajas(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-        nss = request.getParameter("nsse");
+        nss = request.getParameter("nss");
         sesion = request.getSession(false);
         try{
         Class.forName("com.mysql.jdbc.Driver");

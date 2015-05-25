@@ -1,5 +1,5 @@
-function digito(){
-    nssn = "",nt,valor,hue = 0;
+function verificar(){
+    var nssn = "",nt,valor,hue = 0;
     valor = document.getElementById('nss').value;
     if(valor.length === 10){
         for(var i = 1; i <= 10; i++){
@@ -25,8 +25,10 @@ function digito(){
         nssn = hue;
         document.getElementById('digito').value = nssn;
     }
+    else
+        document.getElementById('digito').value = "";
 }
-function validar(){
+function valida(){
     hue = document.getElementById('nss').value;
     jue = document.getElementById('m').value;
     if(hue === null || hue.length !== 10 || jue === "nada"){
@@ -35,9 +37,10 @@ function validar(){
     }else
         return true;
 }
-function select(){
+function combo(){
+    console.log("hue");
     opcion = document.getElementById('m').value;
-    if(opcion === "Escoge una opcion")
+    if(opcion === "cambios")
         document.getElementById("regimen").style.display = "block";
     else
         document.getElementById("regimen").style.display = "none";
