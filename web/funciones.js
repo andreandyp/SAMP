@@ -38,10 +38,18 @@ function valida(){
         return true;
 }
 function combo(){
-    console.log("hue");
     opcion = document.getElementById('m').value;
     if(opcion === "cambios")
         document.getElementById("regimen").style.display = "block";
     else
         document.getElementById("regimen").style.display = "none";
+}
+function usuario(){
+    usu = document.getElementById('usuario').value;
+    if(usu === null){
+        alert("Pon un usuario");
+        return false;
+    }
+    else
+        return true;
 }

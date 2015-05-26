@@ -143,6 +143,7 @@ public class pdf extends HttpServlet {
                 sesion.setAttribute("clave", rs.getString(2));
                 sesion.setAttribute("delegacion", rs.getString(3));
                 sesion.setAttribute("subdelegacion", rs.getString(4));
+                sesion.setAttribute("permisos", rs.getString(5));
                 sesion.setMaxInactiveInterval(1*24*60*60);
                 ruta = "/SAMP/menu.jsp";
                 }
@@ -155,7 +156,6 @@ public class pdf extends HttpServlet {
             sesion.setAttribute("log", e.getMessage());
         }
         finally{
-            
             response.sendRedirect(ruta);
         }
     }
@@ -166,6 +166,37 @@ public class pdf extends HttpServlet {
         sesion.removeAttribute("clave");
         sesion.invalidate();
         response.sendRedirect("/SAMP/");
+    }
+    private void usuarios(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        String user = request.getParameter("usuario");
+        sesion = request.getSession(true);
+        try{
+        Class.forName("com.mysql.jdbc.Driver");
+        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
+        stm = conx.createStatement();
+        }catch (ClassNotFoundException | SQLException e) {
+            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+            sesion.setAttribute("log", e.getMessage());
+        }
+        try{
+        rs = stm.executeQuery("call permisos1('"+user+"')");
+        if(rs.next()){
+            if(rs.getString(1) != null){
+                sesion.setAttribute("permisos1",rs.getString(1));
+                ruta = "/SAMP/permisos.jsp";
+                }
+            else{
+                    sesion.setAttribute("Error", "El usuario no existe");
+                }
+            }
+        }
+        catch(SQLException e){
+            sesion.setAttribute("log", e.getMessage());
+        }
+        finally{
+            response.sendRedirect(ruta);
+        }
     }
     private void bajas(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
@@ -214,6 +245,9 @@ public class pdf extends HttpServlet {
                 break;
             case "salir":
                 salir(request,response);
+                break;
+            case "usuarios":
+                usuarios(request,response);
                 break;
             default:
                 response.sendRedirect(ruta);
