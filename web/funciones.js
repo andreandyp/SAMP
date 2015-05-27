@@ -31,7 +31,7 @@ function verificar(){
 function valida(){
     hue = document.getElementById('nss').value;
     jue = document.getElementById('m').value;
-    if(hue === null || hue.length !== 10 || jue === "nada"){
+    if(hue.length !== 10 || jue === "nada"){
         alert("El NSS debe ser de 10 digitos y debes escoger un tramite");
         return false;
     }else
@@ -44,12 +44,22 @@ function combo(){
     else
         document.getElementById("regimen").style.display = "none";
 }
-function usuario(){
-    usu = document.getElementById('usuario').value;
-    if(usu === null){
-        alert("Pon un usuario");
+function usuarios(){
+    hue = document.getElementById('usuario').value;
+    if(hue.length === 0){
+        alert("Inserta un usuario");
         return false;
-    }
-    else
+    }else
         return true;
+}
+function numero(e){
+    var keynum;
+    if(window.event)
+        keynum = e.keyCode;
+    else
+        keynum = e.which;
+    if((keynum >= 48 && keynum <= 57))
+        return true;
+    else
+        return false;
 }

@@ -19,12 +19,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 @WebServlet(name = "pdf", urlPatterns = {"/pdf"})
-public class pdf extends HttpServlet {
+public class pdf extends HttpServlet{
     Connection conx;
     Statement stm;
     ResultSet rs;
     String nss,ruta = "/SAMP/error.jsp",usuario,delegacion,subdelegacion;
     HttpSession sesion;
+    private void conexion() throws SQLException,ClassNotFoundException{
+        Class.forName("com.mysql.jdbc.Driver");
+        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
+        stm = conx.createStatement();
+    }
     private void cambios(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String regimen,u,d,s;
@@ -34,11 +39,8 @@ public class pdf extends HttpServlet {
         u = sesion.getAttribute("usuario").toString();
         d = sesion.getAttribute("delegacion").toString();
         s = sesion.getAttribute("subdelegacion").toString();
-        try{
-        Class.forName("com.mysql.jdbc.Driver");
-        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
-        stm = conx.createStatement();
-        } catch (ClassNotFoundException | SQLException e) {
+        try{conexion();}
+        catch (ClassNotFoundException | SQLException e) {
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
             sesion.setAttribute("log", e.getMessage());
         }
@@ -82,13 +84,10 @@ public class pdf extends HttpServlet {
             throws ServletException, IOException {
         nss = request.getParameter("nss");
         sesion = request.getSession(false);
-        try{
-        Class.forName("com.mysql.jdbc.Driver");
-        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
-        stm = conx.createStatement();
-        } catch (ClassNotFoundException | SQLException e) {
-            sesion.setAttribute("log", e.getMessage());
+        try{conexion();}
+        catch (ClassNotFoundException | SQLException e) {
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+            sesion.setAttribute("log", e.getMessage());
         }
         try{
         String doc = getServletConfig().getServletContext().getRealPath ("/");
@@ -127,11 +126,8 @@ public class pdf extends HttpServlet {
         String pass = request.getParameter("pass");
         sesion = request.getSession(true);
         sesion.setMaxInactiveInterval(60*60*24);
-        try{
-        Class.forName("com.mysql.jdbc.Driver");
-        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
-        stm = conx.createStatement();
-        } catch (ClassNotFoundException | SQLException e) {
+        try{conexion();}
+        catch (ClassNotFoundException | SQLException e) {
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
             sesion.setAttribute("log", e.getMessage());
         }
@@ -151,6 +147,7 @@ public class pdf extends HttpServlet {
                     sesion.setAttribute("Error", "Usuario o clave incorrecto");
                 }
             }
+        conx.close();
         }
         catch(SQLException e){
             sesion.setAttribute("log", e.getMessage());
@@ -171,11 +168,8 @@ public class pdf extends HttpServlet {
         throws ServletException, IOException {
         String user = request.getParameter("usuario");
         sesion = request.getSession(true);
-        try{
-        Class.forName("com.mysql.jdbc.Driver");
-        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
-        stm = conx.createStatement();
-        }catch (ClassNotFoundException | SQLException e) {
+        try{conexion();}
+        catch (ClassNotFoundException | SQLException e) {
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
             sesion.setAttribute("log", e.getMessage());
         }
@@ -190,6 +184,7 @@ public class pdf extends HttpServlet {
                     sesion.setAttribute("Error", "El usuario no existe");
                 }
             }
+        conx.close();
         }
         catch(SQLException e){
             sesion.setAttribute("log", e.getMessage());
@@ -202,17 +197,15 @@ public class pdf extends HttpServlet {
         throws ServletException, IOException {
         nss = request.getParameter("nss");
         sesion = request.getSession(false);
-        try{
-        Class.forName("com.mysql.jdbc.Driver");
-        conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
-        stm = conx.createStatement();
-        } catch (ClassNotFoundException | SQLException e) {
+        try{conexion();}
+        catch (ClassNotFoundException | SQLException e) {
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
             sesion.setAttribute("log", e.getMessage());
         }
-        try {
+        try{
             stm.executeQuery("call bajas('"+nss+"')");
             sesion.setAttribute("Archivo",null);
+            conx.close();
         } catch (SQLException e) {
             sesion.setAttribute("Error", "Error desconocido en la aplicacion");
             sesion.setAttribute("log", e.getMessage());

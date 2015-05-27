@@ -15,8 +15,8 @@
         <div id="Pensiones">
             <h1>Pensiones</h1>
             <form method="post" action="pdf" onsubmit="return valida()">
-                <input type="text" placeholder="NSS" id="nss" name="nss" maxlength="10" onkeyup="verificar()">
-                <input type="text" placeholder="digito" id="digito" maxlength="1"><br>
+                <input type="text" placeholder="NSS" id="nss" name="nss" maxlength="10" onkeyup="verificar()" onkeypress="return numero(event)">
+                <input type="text" placeholder="digito" id="digito" maxlength="1" disabled><br>
                 <select name="m" id="m" onchange="combo()">
                     <option value="nada" selected>Escoge una opcion</option>
                     <option value="cambios">Modificaciones</option>
