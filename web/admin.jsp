@@ -12,7 +12,7 @@
             if(sesion.getAttribute("usuario") == null || sesion.getAttribute("clave") == null)
                 response.sendRedirect("/SAMP/error.jsp?error=acceso");
         %>
-        <form method="post" action="pdf?m=usuarios" onsubmit="return usuario()">
+        <form method="post" action="pdf?m=usuarios" method="post" onsubmit="return usuario()">
             <input type="text" placeholder="Usuario" id="usuario" name="usuario"><br>
             <input type="submit" value="Ver permisos">
         </form>
