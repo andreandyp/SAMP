@@ -30,96 +30,6 @@ public class pdf extends HttpServlet{
         conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
         stm = conx.createStatement();
     }
-    private void cambios(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String regimen,u,d,s;
-        nss = request.getParameter("nss");
-        sesion = request.getSession(false);
-        regimen = request.getParameter("regimen");
-        u = sesion.getAttribute("usuario").toString();
-        d = sesion.getAttribute("delegacion").toString();
-        s = sesion.getAttribute("subdelegacion").toString();
-        try{conexion();}
-        catch (ClassNotFoundException | SQLException e) {
-            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
-            sesion.setAttribute("log", e.getMessage());
-        }
-        try{
-        String doc = getServletConfig().getServletContext().getRealPath ("/");
-        FileOutputStream fos = new FileOutputStream(doc+"extras/modificaciones.pdf");
-        PdfReader reader = new PdfReader(doc+"extras/vaciomodificaciones.pdf");
-        PdfReader.unethicalreading = true;
-        PdfStamper stamper = new PdfStamper(reader, fos);
-        AcroFields form = stamper.getAcroFields();
-        for(int i = 1; i <=12; ++i){
-            rs = stm.executeQuery("call modificaciones('"+nss+"','"+regimen+"')");
-            if(rs.next()){
-                if(rs.getString(1) != null)
-                    form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
-            }
-        }
-        form.setField("text_"+Integer.toString(13),regimen);
-        usuario usu = new usuario();
-        form.setField("text_"+Integer.toString(14),usu.cifrado(u,s,d));
-        Date now = new Date();
-        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        form.setField("text_"+Integer.toString(15),df.format(now));
-        stamper.close();
-        reader.close();
-        fos.close();
-        conx.close();
-        ruta = "/SAMP/exito.jsp";
-        sesion.setAttribute("Archivo", "extras/modificaciones.pdf");
-        }
-        catch (DocumentException | SQLException e){
-            sesion.setAttribute("log", e.getMessage());
-            sesion.setAttribute("Error", "NSS incorrecto o usuario inexistente");
-            ruta = "/SAMP/error.jsp";
-        }
-        finally{
-            response.sendRedirect(ruta);
-        }
-    }
-    private void consultas(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        nss = request.getParameter("nss");
-        sesion = request.getSession(false);
-        try{conexion();}
-        catch (ClassNotFoundException | SQLException e) {
-            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
-            sesion.setAttribute("log", e.getMessage());
-        }
-        try{
-        String doc = getServletConfig().getServletContext().getRealPath ("/");
-        FileOutputStream fos = new FileOutputStream(doc+"extras/consultas.pdf");
-        PdfReader reader = new PdfReader(doc+"extras/vacioconsultas.pdf");
-        PdfReader.unethicalreading = true;
-        PdfStamper stamper = new PdfStamper(reader, fos);
-        AcroFields form = stamper.getAcroFields();
-
-        for(int i = 1; i <=10; ++i){
-            rs = stm.executeQuery("call consultas('"+nss+"')");
-            if(rs.next()){
-                if(rs.getString(1) != null)
-                    form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
-            }
-        }
-        stamper.close();
-        reader.close();
-        fos.close();
-        conx.close();
-        ruta = "/SAMP/exito.jsp";
-        sesion.setAttribute("Archivo", "extras/consultas.pdf");
-        }
-        catch (DocumentException | SQLException e){
-            sesion.setAttribute("log", e.getMessage());
-            sesion.setAttribute("Error", "NSS incorrecto o usuario deshabilitado");
-            ruta = "/SAMP/error.jsp";
-        }
-        finally{
-            response.sendRedirect(ruta);
-        }
-    }
     private void inicio(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String user = request.getParameter("user");
@@ -164,30 +74,89 @@ public class pdf extends HttpServlet{
         sesion.invalidate();
         response.sendRedirect("/SAMP/");
     }
-    private void usuarios(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-        String user = request.getParameter("usuario");
-        sesion = request.getSession(true);
+    private void cambios(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String regimen,u,d,s;
+        nss = request.getParameter("nss");
+        sesion = request.getSession(false);
+        regimen = request.getParameter("regimen");
+        u = sesion.getAttribute("usuario").toString();
+        d = sesion.getAttribute("delegacion").toString();
+        s = sesion.getAttribute("subdelegacion").toString();
         try{conexion();}
         catch (ClassNotFoundException | SQLException e) {
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
             sesion.setAttribute("log", e.getMessage());
         }
         try{
-        rs = stm.executeQuery("call permisos1('"+user+"')");
-        if(rs.next()){
-            if(rs.getString(1) != null){
-                sesion.setAttribute("permisos1",rs.getString(1));
-                ruta = "/SAMP/permisos.jsp";
-                }
-            else{
-                    sesion.setAttribute("Error", "El usuario no existe");
-                }
+        String doc = getServletConfig().getServletContext().getRealPath ("/");
+        FileOutputStream fos = new FileOutputStream(doc+"extras/modificaciones.pdf");
+        PdfReader reader = new PdfReader(doc+"extras/vaciomodificaciones.pdf");
+        PdfReader.unethicalreading = true;
+        PdfStamper stamper = new PdfStamper(reader, fos);
+        AcroFields form = stamper.getAcroFields();
+        for(int i = 1; i <=12; ++i){
+            rs = stm.executeQuery("call modificaciones('"+nss+"','"+regimen+"')");
+            if(rs.next()){
+                if(rs.getString(1) != null)
+                    form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
             }
-        conx.close();
         }
-        catch(SQLException e){
+        form.setField("text_"+Integer.toString(13),regimen);
+        usuario usu = new usuario();
+        form.setField("text_"+Integer.toString(14),usu.cifrado(u,s,d));
+        Date now = new Date();
+        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        form.setField("text_"+Integer.toString(15),df.format(now));
+        stamper.close();
+        reader.close();
+        fos.close();
+        conx.close();
+        ruta = "/SAMP/exito.jsp?archivo=modificaciones";
+        }
+        catch (DocumentException | SQLException e){
             sesion.setAttribute("log", e.getMessage());
+            sesion.setAttribute("Error", "NSS incorrecto o usuario inexistente");
+            ruta = "/SAMP/error.jsp";
+        }
+        finally{
+            response.sendRedirect(ruta);
+        }
+    }
+    private void consultas(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        nss = request.getParameter("nss");
+        sesion = request.getSession(false);
+        try{conexion();}
+        catch (ClassNotFoundException | SQLException e) {
+            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+            sesion.setAttribute("log", e.getMessage());
+        }
+        try{
+        String doc = getServletConfig().getServletContext().getRealPath ("/");
+        FileOutputStream fos = new FileOutputStream(doc+"extras/consultas.pdf");
+        PdfReader reader = new PdfReader(doc+"extras/vacioconsultas.pdf");
+        PdfReader.unethicalreading = true;
+        PdfStamper stamper = new PdfStamper(reader, fos);
+        AcroFields form = stamper.getAcroFields();
+
+        for(int i = 1; i <=10; ++i){
+            rs = stm.executeQuery("call consultas('"+nss+"')");
+            if(rs.next()){
+                if(rs.getString(1) != null)
+                    form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
+            }
+        }
+        stamper.close();
+        reader.close();
+        fos.close();
+        conx.close();
+        ruta = "/SAMP/exito.jsp?archivo=consultas";
+        }
+        catch (DocumentException | SQLException e){
+            sesion.setAttribute("log", e.getMessage());
+            sesion.setAttribute("Error", "NSS incorrecto o usuario deshabilitado");
+            ruta = "/SAMP/error.jsp";
         }
         finally{
             response.sendRedirect(ruta);
@@ -205,13 +174,66 @@ public class pdf extends HttpServlet{
         try{
             stm.executeQuery("call bajas('"+nss+"')");
             sesion.setAttribute("Archivo",null);
+            ruta = "/SAMP/exito.jsp";
             conx.close();
         } catch (SQLException e) {
             sesion.setAttribute("Error", "Error desconocido en la aplicacion");
             sesion.setAttribute("log", e.getMessage());
         }
         finally{
+            response.sendRedirect(ruta);
+        }
+    }
+    private void usuarios(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException{
+        String user = request.getParameter("usuario");
+        sesion = request.getSession(false);
+        try{conexion();}
+        catch (ClassNotFoundException | SQLException e) {
+            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+            sesion.setAttribute("log", e.getMessage());
+        }
+        try{
+        rs = stm.executeQuery("call permisos1('"+user+"')");
+        if(rs.next()){
+            if(rs.getString(1) != null)
+                ruta = "/SAMP/permisos.jsp?permisos="+rs.getString(1)+"&usuario="+rs.getString(2);
+            else
+                sesion.setAttribute("Error", "El usuario no existe");
+            }
+        conx.close();
+        }
+        catch(SQLException e){
+            sesion.setAttribute("log", e.getMessage());
+        }
+        finally{
+            response.sendRedirect(ruta);
+        }
+    }
+    private void permisos(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException{
+        sesion = request.getSession(false);
+        String [] permiso = request.getParameterValues("permiso");
+        String per = "";
+        String usu = request.getParameter("cosa");
+        for(int i = 0; i < permiso.length; i++){
+            per = per.concat(permiso[i]);
+        }
+        try{conexion();}
+        catch (ClassNotFoundException | SQLException e) {
+            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+            sesion.setAttribute("log", e.getMessage());
+        }
+        try{
+            rs = stm.executeQuery("call permisos2('"+usu+"','"+per+"')");
             ruta = "/SAMP/exito.jsp";
+            conx.close();
+        }
+        catch(SQLException e){
+            sesion.setAttribute("Error", "Error desconocido en la aplicacion");
+            sesion.setAttribute("log", e.getMessage());
+        }
+        finally{
             response.sendRedirect(ruta);
         }
     }
@@ -221,6 +243,12 @@ public class pdf extends HttpServlet{
             throws ServletException, IOException {
         String m = request.getParameter("m");
         switch(m){
+            case "inicio":
+                inicio(request,response);
+                break;
+            case "salir":
+                salir(request,response);
+                break;
             case "cambios":
                 cambios(request,response);
                 break;
@@ -233,14 +261,11 @@ public class pdf extends HttpServlet{
             case "extras":
                 //extras(request,response);
                 break;
-            case "inicio":
-                inicio(request,response);
-                break;
-            case "salir":
-                salir(request,response);
-                break;
             case "usuarios":
                 usuarios(request,response);
+                break;
+            case "permisos":
+                permisos(request,response);
                 break;
             default:
                 response.sendRedirect(ruta);

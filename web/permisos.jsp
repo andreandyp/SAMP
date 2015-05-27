@@ -11,7 +11,7 @@
         %>
         <script type="text/javascript">
             function cuadritos(){
-                var permisos = <%=sesion.getAttribute("permisos1")%>;
+                var permisos = <%out.println(request.getParameter("permisos"));%>;
                 permisos = permisos.toString();
                 for(var i = 0; i <= permisos.length; ++i){
                     document.getElementById('c'+permisos.charAt(i)).checked = true;
@@ -20,7 +20,8 @@
         </script>
     </head>
     <body onload="cuadritos()">
-        <form name="checks" action="pdf" method="post">
+        <form name="checks" action="pdf?m=permisos" method="post">
+            <input type="text" value="<%out.println(request.getParameter("usuario"));%>" name="cosa">
             <h3>Pensiones</h3>
             Modificar<input type="checkbox" value="1" id="c1" name="permiso"><br>
             Consultar<input type="checkbox" value="2" id="c2" name="permiso"><br>

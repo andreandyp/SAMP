@@ -55,7 +55,7 @@ delimiter //
     declare existente int;
 	set existente = (select count(*) from usuarios where usuario=user);
 	if existente = 1 then
-		select permisos from usuarios where usuario=user;
+		select permisos,usuario from usuarios where usuario=user;
 	else
 		select null as valido;
 	end if;
@@ -106,6 +106,18 @@ begin
         insert into deshabilitados(nombrea,nombres,curp,nss,regimen) select nombrea,nombres,curp,nss,regimen from personas where nss=nsss;
 	else
 		set existente = 0;
+	end if;
+end //
+delimiter ;
+delimiter //
+    create procedure permisos2(in usu nvarchar(10),in perm nvarchar(10))
+	begin
+    declare existente int;
+	set existente = (select count(*) from usuarios where usuario=usu);
+	if existente = 1 then
+                update usuarios set permisos = perm where usuario = usu;
+	else
+		select null as valido;
 	end if;
 end //
 delimiter ;
