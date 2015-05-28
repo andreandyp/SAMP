@@ -121,3 +121,4 @@ delimiter //
 	end if;
 end //
 delimiter ;
+call permisos2('IMSS',12345678);

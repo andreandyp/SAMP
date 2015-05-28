@@ -21,7 +21,8 @@
     </head>
     <body onload="cuadritos()">
         <form name="checks" action="pdf?m=permisos" method="post">
-            <input type="text" value="<%out.println(request.getParameter("usuario"));%>" name="cosa">
+            <p><%out.println(request.getParameter("usuario"));%></p>
+            <input type="text" value="<%out.println(request.getParameter("usuario"));%>" name="cosa" hidden>
             <h3>Pensiones</h3>
             Modificar<input type="checkbox" value="1" id="c1" name="permiso"><br>
             Consultar<input type="checkbox" value="2" id="c2" name="permiso"><br>

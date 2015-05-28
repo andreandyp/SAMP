@@ -226,6 +226,7 @@ public class pdf extends HttpServlet{
         }
         try{
             rs = stm.executeQuery("call permisos2('"+usu+"','"+per+"')");
+            sesion.setAttribute("permisos", per);
             ruta = "/SAMP/exito.jsp";
             conx.close();
         }
