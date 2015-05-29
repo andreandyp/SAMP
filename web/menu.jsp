@@ -11,13 +11,13 @@
                 HttpSession sesion = request.getSession(false);
                 String prm = sesion.getAttribute("permisos").toString();
                 if(prm.indexOf('1') == -1 && prm.indexOf('2') == -1 && prm.indexOf('3') == -1)
-                    out.println("document.getElementById('pensiones').hidden = true;");
+                    out.println("document.getElementById('pensiones').style.display = \"none\";");
                 if(prm.indexOf('4') == -1 && prm.indexOf('5') == -1)
-                    out.println("document.getElementById('casos').hidden = true;");
-                if(prm.indexOf('6') == -1 && prm.indexOf('7') == -1)
-                    out.println("document.getElementById('admin').hidden = true;");
+                    out.println("document.getElementById('casos').style.display = \"none\";");
+                if(prm.indexOf('6') == -1)
+                    out.println("document.getElementById('admin').style.display = \"none\";");
                 if(prm.indexOf('8') == -1)
-                    out.println("document.getElementById('estadisticas').hidden = true;");
+                    out.println("document.getElementById('estadisticas').style.display = \"none\";");
             %>
                 }
         </script>
