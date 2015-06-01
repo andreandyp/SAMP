@@ -14,9 +14,9 @@
                     out.println("document.getElementById('pensiones').style.display = \"none\";");
                 if(prm.indexOf('4') == -1 && prm.indexOf('5') == -1)
                     out.println("document.getElementById('casos').style.display = \"none\";");
-                if(prm.indexOf('6') == -1)
+                if(prm.indexOf('6') == -1 && prm.indexOf('8') == -1 && prm.indexOf('9') == -1)
                     out.println("document.getElementById('admin').style.display = \"none\";");
-                if(prm.indexOf('8') == -1)
+                if(prm.indexOf('0') == -1)
                     out.println("document.getElementById('estadisticas').style.display = \"none\";");
             %>
                 }
