@@ -238,6 +238,28 @@ public class pdf extends HttpServlet{
             response.sendRedirect(ruta);
         }
     }
+    private void borrar(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException{
+        sesion = request.getSession(false);
+        String usu = request.getParameter("cosa2");
+        try{conexion();}
+        catch (ClassNotFoundException | SQLException e) {
+            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+            sesion.setAttribute("log", e.getMessage());
+        }
+        try{
+            rs = stm.executeQuery("call eliminar('"+usu+"')");
+            ruta = "/SAMP/exito.jsp";
+            conx.close();
+        }
+        catch(SQLException e){
+            sesion.setAttribute("Error", "Error desconocido en la aplicacion");
+            sesion.setAttribute("log", e.getMessage());
+        }
+        finally{
+            response.sendRedirect(ruta);
+        }
+    }
     // <editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -267,6 +289,11 @@ public class pdf extends HttpServlet{
                 break;
             case "permisos":
                 permisos(request,response);
+                break;
+            case "agregar":
+                //agregar(request,response);
+            case "borrar":
+                borrar(request,response);
                 break;
             default:
                 response.sendRedirect(ruta);

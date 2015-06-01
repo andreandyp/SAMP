@@ -5,10 +5,24 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Apartado de pensiones</title>
         <script type="text/javascript" src="funciones.js"></script>
+        <script type="text/javascript">
+            function eliminar(){
+                var opcion = document.getElementById('m');
+                <%
+                    HttpSession sesion = request.getSession(false);
+                    String prm = sesion.getAttribute("permisos").toString();
+                    if(prm.indexOf('3') == -1)
+                        out.println("opcion.remove(3);");
+                    if(prm.indexOf('2') == -1)
+                        out.println("opcion.remove(2);");
+                    if(prm.indexOf('1') == -1)
+                        out.println("opcion.remove(1);");
+                %>
+            }
+        </script>
     </head>
-    <body>
+    <body onload="eliminar()">
         <%
-            HttpSession sesion = request.getSession(false);
             if(sesion.getAttribute("usuario") == null || sesion.getAttribute("clave") == null)
                 response.sendRedirect("/SAMP/error.jsp?error=acceso");
         %>
