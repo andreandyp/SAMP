@@ -16,7 +16,7 @@ section.principal {
 
 section.principal section.contenido {
 	display: block;
-	margin: 5em auto;
+	margin: 2em auto;
 	padding: .5em;
 	height: auto;
 	text-align: center;
@@ -24,39 +24,32 @@ section.principal section.contenido {
 	line-height: 2em;
 }
 
-section.principal section.contenido h1 {
-	font-size: 1.8em;
+section.principal section.contenido h3 {
+	font-size: 1.5em;
+	margin-top: 1em;
 }
 
 section.principal section.contenido p {
 	margin-bottom: 1em;
+	float: left;
 }
 
-section.principal section.contenido form input {
+section.principal section.contenido input[type="checkbox"] {
+	float: right;
+
+}
+
+
+section.principal section.contenido input[type="submit"] {
 	margin-bottom: 10px;
 	width: 100%;
 	padding: 10px;
-	background: #B6B6B6;
 	text-align: center;
 	vertical-align: middle;
 	border: none;
-	color: #000;
-
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-ms-box-sizing: border-box;
-	-o-box-sizing: border-box;
-	box-sizing: border-box;
-}
-
-::-webkit-input-placeholder { color:#727272; }
-::-moz-placeholder 			{ color:#727272; }
-:-ms-input-placeholder 		{ color:#727272; }
-input:-moz-placeholder 		{ color:#727272; }
-
-section.principal section.contenido form input[type="submit"] {
 	background: #009688;
 	color: #fff;
+	margin-top: 2em;
 
 	-webkit-transition: all .5s ease;	
 	-moz-transition: all .5s ease;
@@ -65,6 +58,6 @@ section.principal section.contenido form input[type="submit"] {
 	transition: all .5s ease;
 }
 
-section.principal section.contenido form input[type="submit"]:hover {
+section.principal section.contenido input[type="submit"]:hover {
 	background: #00796B;
 }

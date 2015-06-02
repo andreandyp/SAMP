@@ -5,9 +5,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
     
-    <title>SAMP - Iniciar Sesión</title>
+    <title>SAMP - Pensiones</title>
 
     <!-- CSS -->
+    <link rel="stylesheet" href="../css/estilos_Menu.css" />
     <link rel="stylesheet" href="../css/estilos_Pensiones.css" />
     <link rel="stylesheet" href="../css/mediaQueries.css" />
     <link rel="stylesheet" href="../fonts/fonts.css" />
@@ -55,7 +56,7 @@
             <form method="post" action="pdf" onsubmit="return valida()">
                 <input type="text" placeholder="NSS" id="nss" name="nss" maxlength="10" onkeyup="verificar()" onkeypress="return numero(event)">
 
-                <input type="text" placeholder="digito" id="digito" maxlength="1" disabled>
+                <input type="text" placeholder="Dígito" id="digito" maxlength="1" disabled>
 
                 <select name="m" id="m" onchange="combo()">
                     <option value="nada" selected>Escoge una opcion</option>
