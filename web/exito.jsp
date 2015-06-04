@@ -19,10 +19,10 @@
             String hue;
             if(sesion.getAttribute("ruta") != null){
                 hue = sesion.getAttribute("ruta").toString();
-                if(!hue.equals("consultas"))
-                    out.println("<a href=/SAMP/extras/"+hue+">Descargar el archivo</a>");
-                else
+                if(hue.equals("consultas"))
                     out.println("<a href=/SAMP/extras/consultas.pdf>Descargar el archivo</a>");
+                else
+                    out.println("<a href=/SAMP/extras/"+hue+">Descargar el archivo</a>");
                 sesion.removeAttribute("ruta");
             }
         %>

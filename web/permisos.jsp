@@ -40,7 +40,7 @@
     </head>
     <body onload="cuadritos()">
         <form name="checks" action="pdf?m=permisos" method="post">
-            <p><%out.println(request.getParameter("usuario"));%></p>
+            <p>Usuario: <%out.println(request.getParameter("usuario"));%></p>
             <input type="text" value="<%out.println(request.getParameter("usuario"));%>" name="cosa" hidden>
             <h3>Pensiones</h3>
             Modificar<input type="checkbox" value="1" id="c1" name="permiso"><br>
@@ -51,11 +51,14 @@
             Completar información<input type="checkbox" value="5" id="c5" name="permiso"><br>
             <h3>Administración de usuarios</h3>
             Ver permisos<input type="checkbox" value="6" id="c6" name="permiso"><br>
-            Modificar permisos<input type="checkbox" value="7" id="c7" name="permiso"><br>
+            Modificar usuario<input type="checkbox" value="7" id="c7" name="permiso"><br>
             Crear usuario<input type="checkbox" value="8" id="c8" name="permiso"><br>
             Borrar usuario<input type="checkbox" value="9" id="c9" name="permiso"><br>
             <h3>Estadisticas</h3>
             Ver estadisticas<input type="checkbox" value="0" id="c0" name="permiso"><br>
+            <h3 id="tclave">Nueva clave</h3>
+            <input type="password" placeholder="Clave antigua" id="vieja" name="vieja">
+            <input type="passoword" placeholder="Clave nueva" id="nueva" name="nueva">
             <input type="submit" id="aceptar" value="Asignar permisos">
             <input type="button" id="regresar" value="Click para regresar"
                    style="display: none;" onclick="javascript:window.location.href='/SAMP/menu.jsp';">

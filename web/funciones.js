@@ -63,3 +63,14 @@ function numero(e){
     else
         return false;
 }
+function vacios(){
+    hue = document.getElementById('usuario').value;
+    jue = document.getElementById('clave').value;
+    gue = document.getElementById('delegacion').value;
+    ue = document.getElementById('subdelegacion').value;
+    if(hue.length === 0 || jue.length === 0 || gue.length === 0 || ue.length === 0){
+        alert("Te falta por llenar un campo");
+        return false;
+    }else
+        return true;
+}

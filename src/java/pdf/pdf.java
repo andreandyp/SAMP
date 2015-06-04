@@ -143,6 +143,7 @@ public class pdf extends HttpServlet{
         }
         try{
         String doc = getServletConfig().getServletContext().getRealPath ("/");
+        sesion.setAttribute("ruta", "consultas");
         FileOutputStream fos = new FileOutputStream(doc+"extras/consultas.pdf");
         PdfReader reader = new PdfReader(doc+"extras/vacioconsultas.pdf");
         PdfReader.unethicalreading = true;
@@ -163,7 +164,7 @@ public class pdf extends HttpServlet{
         DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         stm.executeQuery("call registro('"+u+"','Pensiones','"+hourdateFormat.format(date)+"')");
         conx.close();
-        ruta = "/SAMP/exito.jsp?archivo=consultas";
+        ruta = "/SAMP/exito.jsp";
         }
         catch (DocumentException | SQLException e){
             sesion.setAttribute("log", e.getMessage());

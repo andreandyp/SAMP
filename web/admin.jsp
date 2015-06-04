@@ -15,12 +15,15 @@
         <h1>Administrar permisos de usuario</h1>
         <form method="post" action="pdf?m=usuarios" method="post" onsubmit="return usuarios()">
             <input type="text" placeholder="Usuario" id="usuario" name="usuario"><br>
-            <input type="submit" value="Ver permisos">
+            <input type="submit" value="Administrar">
         </form>
         <h1>Crear usuario</h1>
-        <form method="post" action="pdf?m=crear" method="post" onsubmit="return usuarios()">
+        <form method="post" action="pdf?m=crear" method="post" onsubmit="return vacios()">
             <input type="text" placeholder="Nuevo usuario" id="usuario" name="nuevo"><br>
-            <input type="submit" value="Ver permisos">
+            <input type="password" placeholder="Clave" id="clave" name="clave"><br>
+            <input type="delegacion" placeholder="Delegacion" id="delegacion" name="delegacion" onkeypress="return numero(event)" maxlength="2"><br>
+            <input type="subdelegacion" placeholder="Subdelegacion" id="subdelegacion" name="subdelegacion" onkeypress="return numero(event)" maxlength="3"><br>
+            <input type="submit" value="Crear">
         </form>
     </body>
 </html>
