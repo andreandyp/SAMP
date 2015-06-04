@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,8 +24,10 @@ public class pdf extends HttpServlet{
     Connection conx;
     Statement stm;
     ResultSet rs;
-    String nss,ruta = "/SAMP/error.jsp",usuario,delegacion,subdelegacion;
+    String nss,ruta = "/SAMP/error.jsp",usuario,delegacion,subdelegacion,u;
     HttpSession sesion;
+    usuario usu;
+    Date date;
     private void conexion() throws SQLException,ClassNotFoundException{
         Class.forName("com.mysql.jdbc.Driver");
         conx = DriverManager.getConnection("jdbc:mysql://localhost/samp","IMSS","ClaveSecreta127");
@@ -76,7 +79,7 @@ public class pdf extends HttpServlet{
     }
     private void cambios(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String regimen,u,d,s;
+        String regimen,d,s,clave;
         nss = request.getParameter("nss");
         sesion = request.getSession(false);
         regimen = request.getParameter("regimen");
@@ -89,8 +92,11 @@ public class pdf extends HttpServlet{
             sesion.setAttribute("log", e.getMessage());
         }
         try{
+        usu = new usuario();
+        clave = usu.cifrado(u,s,d);
         String doc = getServletConfig().getServletContext().getRealPath ("/");
-        FileOutputStream fos = new FileOutputStream(doc+"extras/modificaciones.pdf");
+        sesion.setAttribute("ruta",clave+"-modif.pdf");
+        FileOutputStream fos = new FileOutputStream(doc+"extras/"+clave+"-modif.pdf");
         PdfReader reader = new PdfReader(doc+"extras/vaciomodificaciones.pdf");
         PdfReader.unethicalreading = true;
         PdfStamper stamper = new PdfStamper(reader, fos);
@@ -103,16 +109,18 @@ public class pdf extends HttpServlet{
             }
         }
         form.setField("text_"+Integer.toString(13),regimen);
-        usuario usu = new usuario();
-        form.setField("text_"+Integer.toString(14),usu.cifrado(u,s,d));
+        form.setField("text_"+Integer.toString(14),clave);
         Date now = new Date();
         DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
         form.setField("text_"+Integer.toString(15),df.format(now));
         stamper.close();
         reader.close();
         fos.close();
+        date = new Date();
+        DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        stm.executeQuery("call registro('"+u+"','Pensiones','"+hourdateFormat.format(date)+"')");
         conx.close();
-        ruta = "/SAMP/exito.jsp?archivo=modificaciones";
+        ruta = "/SAMP/exito.jsp";
         }
         catch (DocumentException | SQLException e){
             sesion.setAttribute("log", e.getMessage());
@@ -125,6 +133,7 @@ public class pdf extends HttpServlet{
     }
     private void consultas(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        u = sesion.getAttribute("usuario").toString();
         nss = request.getParameter("nss");
         sesion = request.getSession(false);
         try{conexion();}
@@ -150,6 +159,9 @@ public class pdf extends HttpServlet{
         stamper.close();
         reader.close();
         fos.close();
+        date = new Date();
+        DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        stm.executeQuery("call registro('"+u+"','Pensiones','"+hourdateFormat.format(date)+"')");
         conx.close();
         ruta = "/SAMP/exito.jsp?archivo=consultas";
         }
@@ -164,6 +176,7 @@ public class pdf extends HttpServlet{
     }
     private void bajas(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
+        u = sesion.getAttribute("usuario").toString();
         nss = request.getParameter("nss");
         sesion = request.getSession(false);
         try{conexion();}
@@ -175,6 +188,9 @@ public class pdf extends HttpServlet{
             stm.executeQuery("call bajas('"+nss+"')");
             sesion.setAttribute("Archivo",null);
             ruta = "/SAMP/exito.jsp";
+            date = new Date();
+            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            stm.executeQuery("call registro('"+u+"','Pensiones','"+hourdateFormat.format(date)+"')");
             conx.close();
         } catch (SQLException e) {
             sesion.setAttribute("Error", "Error desconocido en la aplicacion");
@@ -212,6 +228,7 @@ public class pdf extends HttpServlet{
     }
     private void permisos(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException{
+        u = sesion.getAttribute("usuario").toString();
         sesion = request.getSession(false);
         String [] permiso = request.getParameterValues("permiso");
         String per = "";
@@ -226,8 +243,12 @@ public class pdf extends HttpServlet{
         }
         try{
             rs = stm.executeQuery("call permisos2('"+usu+"','"+per+"')");
-            sesion.setAttribute("permisos", per);
+            if(usu.equals(sesion.getAttribute("usuario").toString()))
+                sesion.setAttribute("permisos", per);
             ruta = "/SAMP/exito.jsp";
+            date = new Date();
+            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            stm.executeQuery("call registro('"+u+"','Permisos','"+hourdateFormat.format(date)+"')");
             conx.close();
         }
         catch(SQLException e){
@@ -240,6 +261,7 @@ public class pdf extends HttpServlet{
     }
     private void borrar(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException{
+        u = sesion.getAttribute("usuario").toString();
         sesion = request.getSession(false);
         String usu = request.getParameter("cosa2");
         try{conexion();}
@@ -250,6 +272,9 @@ public class pdf extends HttpServlet{
         try{
             rs = stm.executeQuery("call eliminar('"+usu+"')");
             ruta = "/SAMP/exito.jsp";
+            date = new Date();
+            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            stm.executeQuery("call registro('"+u+"','Permisos','"+hourdateFormat.format(date)+"')");
             conx.close();
         }
         catch(SQLException e){
@@ -294,9 +319,6 @@ public class pdf extends HttpServlet{
                 //agregar(request,response);
             case "borrar":
                 borrar(request,response);
-                break;
-            default:
-                response.sendRedirect(ruta);
                 break;
         }   
     }
