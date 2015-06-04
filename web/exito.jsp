@@ -16,12 +16,14 @@
         <h1>¡El tramite se realizo con exito!</h1>
         <input type="button" value="Click para regresar" onclick="javascript:window.location.href='/SAMP/menu.jsp';"><br>
         <%
-            String hue = request.getParameter("archivo");
-            if(hue != null){
-                if(hue.equals("consulas"))
-                    out.println("<a href=/SAMP/extras/consultas.pdf>Descargar el archivo</a>");
+            String hue;
+            if(sesion.getAttribute("ruta") != null){
+                hue = sesion.getAttribute("ruta").toString();
+                if(!hue.equals("consultas"))
+                    out.println("<a href=/SAMP/extras/"+hue+">Descargar el archivo</a>");
                 else
-                    out.println("<a href=/SAMP/extras/modificaciones.pdf>Descargar el archivo</a>");
+                    out.println("<a href=/SAMP/extras/consultas.pdf>Descargar el archivo</a>");
+                sesion.removeAttribute("ruta");
             }
         %>
     </body>
