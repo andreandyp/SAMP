@@ -52,7 +52,7 @@
                 <li><a href="#">Pensiones</a></li>
                 <li><a href="#">Casos Extraordinarios</a></li>
                 <li><a href="#">Estadísticas</a></li>
-                <li><a href="#">Usuarios</a></li>
+                <li><a href="#" class="actual">Usuarios</a></li>
             </ul>
         </nav>
 
@@ -69,29 +69,29 @@
 
                 <h3>Pensiones</h3>
 
-                <p>Modificar</p><input type="checkbox" value="1" id="c1" name="permiso"><br>
-                Consultar<input type="checkbox" value="2" id="c2" name="permiso"><br>
-                Deshabilitar<input type="checkbox" value="3" id="c3" name="permiso"><br>
+                <div><p>Modificar</p><input type="checkbox" value="1" id="c1" name="permiso"></div>
+                <div><p>Consultar</p><input type="checkbox" value="2" id="c2" name="permiso"></div>
+                <div><p>Deshabilitar</p><input type="checkbox" value="3" id="c3" name="permiso"></div>
 
 
 
                 <h3>Casos especiales</h3>
 
-                Ver información disponible<input type="checkbox" value="4" id="c4" name="permiso"><br>
-                Completar información<input type="checkbox" value="5" id="c5" name="permiso"><br>
+                <div><p>Ver información disponible</p><input type="checkbox" value="4" id="c4" name="permiso"></div>
+                <div><p>Completar información</p><input type="checkbox" value="5" id="c5" name="permiso"></div>
 
 
 
                 <h3>Administración de usuarios</h3>
 
-                Ver permisos<input type="checkbox" value="6" id="c6" name="permiso"><br>
-                Modificar permisos<input type="checkbox" value="7" id="c7" name="permiso"><br>
+                <div><p>Ver permisos</p><input type="checkbox" value="6" id="c6" name="permiso"></div>
+                <div><p>Modificar permisos</p><input type="checkbox" value="7" id="c7" name="permiso"></div>
 
 
 
                 <h3>Estadisticas</h3>
 
-                Ver estadisticas<input type="checkbox" value="8" id="c8" name="permiso"><br>
+                <div><p>Ver estadisticas</p><input type="checkbox" value="8" id="c8" name="permiso"></div>
                 <input type="submit" value="Asignar permisos">
             </form>
         </section>
