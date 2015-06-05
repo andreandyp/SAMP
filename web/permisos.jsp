@@ -16,6 +16,7 @@
                 for(var i = 0; i < permisos.length; ++i){
                     document.getElementById('c'+permisos.charAt(i)).checked = true;
                 }
+                document.getElementById('coinciden').value = "";
                 <%
                     String prm = sesion.getAttribute("permisos").toString();
                     if(prm.indexOf('7') == -1){
@@ -29,6 +30,10 @@
                         out.println("document.getElementById('c8').disabled = true;");
                         out.println("document.getElementById('c9').disabled = true;");
                         out.println("document.getElementById('c0').disabled = true;");
+                        out.println("document.getElementById('vieja').style.display = \"none\";");
+                        out.println("document.getElementById('nueva').style.display = \"none\";");
+                        out.println("document.getElementById('nueva2').style.display = \"none\";");
+                        out.println("document.getElementById('coinciden').style.display = \"none\";");
                         out.println("document.getElementById('aceptar').style.display = \"none\";");
                         out.println("document.getElementById('regresar').style.display = \"block\";");
                     }
@@ -37,9 +42,14 @@
                 %>
             }
         </script>
+        <script type="text/javascript" src="js/funciones.js"></script>
     </head>
     <body onload="cuadritos()">
-        <form name="checks" action="pdf?m=permisos" method="post">
+        <%
+                    if(request.getParameter("error") != null)
+                        out.println("Clave incorrecta");
+        %>
+        <form name="checks" action="pdf?m=permisos" method="post" onsubmit="return cambioclave()">
             <p>Usuario: <%out.println(request.getParameter("usuario"));%></p>
             <input type="text" value="<%out.println(request.getParameter("usuario"));%>" name="cosa" hidden>
             <h3>Pensiones</h3>
@@ -57,8 +67,10 @@
             <h3>Estadisticas</h3>
             Ver estadisticas<input type="checkbox" value="0" id="c0" name="permiso"><br>
             <h3 id="tclave">Nueva clave</h3>
-            <input type="password" placeholder="Clave antigua" id="vieja" name="vieja">
-            <input type="passoword" placeholder="Clave nueva" id="nueva" name="nueva">
+            <input type="password" placeholder="Clave antigua" id="vieja" name="vieja"><br>
+            <input type="password" placeholder="Clave nueva" id="nueva" name="nueva"><br>
+            <input type="password" placeholder="Repetir clave" id="nueva2" onkeyup="repetir()"><br>
+            <input type="text" value="" id="coinciden" disabled><br>
             <input type="submit" id="aceptar" value="Asignar permisos">
             <input type="button" id="regresar" value="Click para regresar"
                    style="display: none;" onclick="javascript:window.location.href='/SAMP/menu.jsp';">

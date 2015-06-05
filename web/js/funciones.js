@@ -18,7 +18,7 @@ function verificar(){
         for(var i = 1; i <= 10; i++){
             hue = hue + (parseInt(nssn.charAt(i-1)));
         }
-        while(hue > 10){
+        while(hue > 9){
             hue = hue.toString();
             hue = parseInt(hue.charAt(0)) + parseInt(hue.charAt(1));
         }
@@ -72,5 +72,27 @@ function vacios(){
         alert("Te falta por llenar un campo");
         return false;
     }else
+        return true;
+}
+function repetir(){
+    clave1 = document.getElementById('nueva').value;
+    clave2 = document.getElementById('nueva2').value;
+    if(clave1 !== clave2){
+        document.getElementById('coinciden').value = "Las claves no coinciden";
+        document.getElementById('aceptar').value = "Asignar permisos";
+    }
+    else{
+        document.getElementById('coinciden').value = "Claves iguales";
+        document.getElementById('aceptar').value = "Asignar permisos y cambiar clave";
+    }
+}
+function cambioclave(){
+    vieja = clave2 = document.getElementById('vieja').value;
+    igual = document.getElementById('coinciden').value;
+    if(vieja.length === 0 && igual === "Las claves no coinciden"){
+        alert('Inserta la clave antigua y haz que ambas claves nuevas coincidan');
+        return false;
+    }
+    else
         return true;
 }
