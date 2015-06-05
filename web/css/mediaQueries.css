@@ -1,0 +1,130 @@
+@media screen and (min-width: 200px) {
+	section.principal section.contenido {
+		max-width: 250px;
+	}
+
+	header {
+		height: 50px;
+	}
+}
+
+@media screen and (max-width: 450px) {
+	header figure.logo_gob {
+		display: none;
+	}
+
+	header figure.logo_imss {
+		width: 50%;
+	}
+
+	header div {
+		width: 50%;
+	}
+}
+
+@media screen and (min-width: 400px) {
+	section.principal section.contenido {
+		max-width: 300px;
+	}
+}
+
+@media screen and (min-width: 600px) {
+	section.principal section.contenido {
+		max-width: 325px;
+	}
+
+	header nav ul li a {
+		font-size: 1.1em;
+	}
+}
+
+@media screen and (max-width: 700px) {
+	section.principal section.contenido {
+		max-width: 325px;
+	}
+
+	header figure {
+		width: 30%;
+	}
+
+	header div {
+		display: table-cell;
+		width: 40%;
+		vertical-align: middle;
+	}
+
+	header div a {
+		display: block;
+		padding: 1em;
+		text-decoration: none;
+	}
+
+	header div a span {
+		font-size: 2em;
+		color: #009688;
+	}
+
+	header nav {
+		position: absolute;
+		top: 80px;
+		left: -200%;
+		display: block;
+		width: 300px;
+		height: 14em;
+		background: #000;	
+	}
+
+	header nav ul li {
+		display: block;
+		width: 100%;
+	}
+
+	header nav ul li a {
+		display: block;
+		padding: 1em;
+		text-decoration: none;
+		background: #009688;
+		font-size: 1.3em;
+		color: #fff;
+
+		-webkit-transition: all .5s ease;	
+		-moz-transition: all .5s ease;
+		-ms-transition: all .5s ease;
+		-o-transition: all .5s ease;
+		transition: all .5s ease;
+	}
+
+	header nav ul li a:hover {
+		background: #00796B;
+	}
+}
+
+@media screen and (min-width: 800px) {
+	section.principal section.contenido {
+		max-width: 350px;
+	}
+
+	header nav ul li a {
+		font-size: 1.3em;
+	}
+}
+
+@media screen and (min-width: 1000px) {
+	section.principal section.contenido {
+		max-width: 375px;
+	}
+
+	header nav ul li a {
+		font-size: 1.3em;
+	}
+}
+
+@media screen and (min-width: 1200px) {
+	section.principal section.contenido {
+		max-width: 400px;
+	}
+
+	header nav ul li a {
+		font-size: 1.3em;
+	}
+}

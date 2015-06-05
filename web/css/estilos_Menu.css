@@ -1,0 +1,109 @@
+* {
+	margin: 0;
+	padding: 0;
+	font-size: 16px;
+}
+
+
+
+/*** HEADER ***/
+
+header {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	display: table;
+	border-bottom: solid 3px #9E9E9E;
+	vertical-align: middle;
+	background: #fff;
+}
+
+header div {
+	display: none;
+}
+
+header figure {
+	display: table-cell;
+	width: 15%;
+	vertical-align: middle;
+	text-align: center;
+}
+
+header figure img {
+	display: block;
+	margin: 10px auto;
+	width: 90%;
+	min-height: 50px;
+	max-height: 60px;
+}
+
+header nav {
+	display: table-cell;
+	width: 70%;
+	height: 100%;
+	vertical-align: middle;
+}
+
+header nav ul {
+	list-style: none;
+	display: table;
+	width: 100%;
+}
+
+header nav ul li {
+	display: table-cell;
+	width: 25%;
+}
+
+header nav ul li a {
+	color: #000;
+	display: block;
+	height: 100%;
+	line-height: 15px;
+	padding: 1em;
+	text-align: center;
+	text-decoration: none;
+	font-size: 1.3em;
+	
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	box-sizing: border-box;
+
+	-webkit-transition: all .5s ease;	
+	-moz-transition: all .5s ease;
+	-ms-transition: all .5s ease;
+	-o-transition: all .5s ease;
+	transition: all .5s ease;
+}
+
+header nav ul li a:hover {
+	background: #009688;
+	color: #fff;
+}
+
+header nav ul li a.actual {
+	background: #00796B;
+	color: #fff;
+}
+
+
+
+
+/*** FOOTER ***/
+
+footer {
+	width: 100%;
+}
+
+footer figure {
+	width: 30%;
+	margin: 0 auto;
+	text-align: center;
+	vertical-align: middle;
+}
+
+footer figure img {
+	width: 100%;
+}
