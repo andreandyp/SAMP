@@ -24,7 +24,7 @@ public class pdf extends HttpServlet{
     Connection conx;
     Statement stm;
     ResultSet rs;
-    String nss,ruta = "/SAMP/error.jsp",usuario,delegacion,subdelegacion,u;
+    String nss,ruta,usuario,delegacion,subdelegacion,u;
     HttpSession sesion;
     usuario usu;
     Date date;
@@ -54,23 +54,24 @@ public class pdf extends HttpServlet{
                 sesion.setAttribute("subdelegacion", rs.getString(4));
                 sesion.setAttribute("permisos", rs.getString(5));
                 sesion.setMaxInactiveInterval(1*24*60*60);
-                ruta = "/SAMP/menu.jsp";
                 }
             else{
                     sesion.setAttribute("Error", "Usuario o clave incorrecto");
                 }
             }
         conx.close();
+        ruta = "/SAMP/menu.jsp";
         }
         catch(SQLException e){
             sesion.setAttribute("log", e.getMessage());
+            ruta = "/SAMP/error.jsp";
         }
         finally{
             response.sendRedirect(ruta);
         }
     }
     private void salir(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+        throws ServletException, IOException{
         sesion = request.getSession(false);
         sesion.removeAttribute("usuario");
         sesion.removeAttribute("clave");
@@ -196,6 +197,33 @@ public class pdf extends HttpServlet{
         } catch (SQLException e) {
             sesion.setAttribute("Error", "Error desconocido en la aplicacion");
             sesion.setAttribute("log", e.getMessage());
+            ruta = "/SAMP/error.jsp";
+        }
+        finally{
+            response.sendRedirect(ruta);
+        }
+    }
+    private void crear(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException{
+        String clave = request.getParameter("clave");
+        sesion = request.getSession(false);
+        usuario = request.getParameter("nuevo");
+        delegacion = request.getParameter("delegacion");
+        System.out.println(delegacion);
+        subdelegacion = request.getParameter("subdelegacion");
+        try{conexion();}
+        catch (ClassNotFoundException | SQLException e) {
+            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+            sesion.setAttribute("log", e.getMessage());
+        }
+        try{
+            stm.executeQuery("call crear('"+usuario+"','"+clave+"','"+delegacion+"','"+subdelegacion+"','7')");
+            ruta = "/SAMP/permisos.jsp?permisos=7&usuario="+usuario+"";
+        }
+        catch(SQLException sqlex){
+            sesion.setAttribute("log", sqlex.getMessage());
+            sesion.setAttribute("Error", "Error desconocido con la aplicacion");
+            ruta = "/SAMP/error.jsp";
         }
         finally{
             response.sendRedirect(ruta);
@@ -222,6 +250,7 @@ public class pdf extends HttpServlet{
         }
         catch(SQLException e){
             sesion.setAttribute("log", e.getMessage());
+            ruta = "/SAMP/error.jsp";
         }
         finally{
             response.sendRedirect(ruta);
@@ -255,6 +284,7 @@ public class pdf extends HttpServlet{
         catch(SQLException e){
             sesion.setAttribute("Error", "Error desconocido en la aplicacion");
             sesion.setAttribute("log", e.getMessage());
+            ruta = "/SAMP/error.jsp";
         }
         finally{
             response.sendRedirect(ruta);
@@ -281,6 +311,7 @@ public class pdf extends HttpServlet{
         catch(SQLException e){
             sesion.setAttribute("Error", "Error desconocido en la aplicacion");
             sesion.setAttribute("log", e.getMessage());
+            ruta = "/SAMP/error.jsp";
         }
         finally{
             response.sendRedirect(ruta);
@@ -309,6 +340,9 @@ public class pdf extends HttpServlet{
                 break;
             case "extras":
                 //extras(request,response);
+                break;
+            case "crear":
+                crear(request,response);
                 break;
             case "usuarios":
                 usuarios(request,response);

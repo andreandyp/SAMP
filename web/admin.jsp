@@ -20,14 +20,20 @@
     <script type="text/javascript" src="js/jquery/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="js/js_menu.js"></script>
     <script type="text/javascript" src="js/funciones.js"></script>
+    <script type="text/javascript">
+        function ocultar(){
+        <%
+            HttpSession sesion = request.getSession(false);
+            String prm = sesion.getAttribute("permisos").toString();
+            if(prm.indexOf('8') == -1)
+                out.println("document.getElementById('add').style.display = \"none\";");
+            if(sesion.getAttribute("usuario") == null || sesion.getAttribute("clave") == null)
+                response.sendRedirect("/SAMP/error.jsp?error=acceso");
+        %>
+            }
+    </script>
 </head>
-<body>
-    <%
-        HttpSession sesion = request.getSession(false);
-        if(sesion.getAttribute("usuario") == null || sesion.getAttribute("clave") == null)
-            response.sendRedirect("/SAMP/error.jsp?error=acceso");
-    %>
-
+<body onload="ocultar()">
     <header>
         <div>
             <a href="#" class="btn_menu"><span class="icon-menu3"></span></a>       
@@ -50,24 +56,24 @@
             <img src="img/gob.jpg" alt="loguito imss">
         </figure>
     </header>
-
     <section class="principal">
         <section class="contenido">
-            <form method="post" action="pdf?m=usuarios" method="post" onsubmit="return usuarios()">
+            <form method="post" name="u1" action="pdf?m=usuarios" onsubmit="return usuarios()">
                 <input type="text" placeholder="Usuario" id="usuario" name="usuario"><br>
                 <input type="submit" value="Ver permisos">
             </form>
-            <h1>Crear usuario</h1>
-        <form method="post" action="pdf?m=crear" method="post" onsubmit="return vacios()">
-            <input type="text" placeholder="Nuevo usuario" id="usuario" name="nuevo"><br>
-            <input type="password" placeholder="Clave" id="clave" name="clave"><br>
-            <input type="delegacion" placeholder="Delegacion" id="delegacion" name="delegacion" onkeypress="return numero(event)" maxlength="2"><br>
-            <input type="subdelegacion" placeholder="Subdelegacion" id="subdelegacion" name="subdelegacion" onkeypress="return numero(event)" maxlength="3"><br>
-            <input type="submit" value="Crear">
-        </form>
+            <div id="add" style="display: block;">
+                <h1>Crear usuario</h1>
+                <form method="post" name="u2" action="pdf?m=crear" onsubmit="return nadas()">
+                    <input type="text" placeholder="Nuevo usuario" id="nuevo" name="nuevo"><br>
+                    <input type="password" placeholder="Clave" id="clave" name="clave"><br>
+                    <input type="text" placeholder="Delegacion" id="delegacion" name="delegacion" onkeypress="return numero(event)" maxlength="2"><br>
+                    <input type="text" placeholder="Subdelegacion" id="subdelegacion" name="subdelegacion" onkeypress="return numero(event)" maxlength="3"><br>
+                    <input type="submit" value="Crear">
+                </form>
+            </div>
         </section>
     </section>
-
     <footer>
         <figure>
             <img src="" alt="Aquí iría el loguito SAMP si lo tuviera x'D">

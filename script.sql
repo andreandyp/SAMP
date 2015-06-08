@@ -144,3 +144,11 @@ delimiter //
     insert into registro values(usuario,tramite,fh);
 end //
 delimiter ;
+delimiter //
+    create procedure crear(in us nvarchar(10),in lave nvarchar(16),in dele int(2),in sub int(3),in prmiso nvarchar(10))
+    begin
+    insert into usuarios values(us,lave,dele,sub,prmiso);
+end //
+delimiter ;
+
+select * from usuarios;

@@ -51,7 +51,7 @@
 
             <input type="button" value="Regresar" onclick="javascript: window.history.back();"><br><br>
 
-            <!-- <%
+            <%
                 HttpSession sesion = request.getSession(false);
                 if(request.getParameter("error") != null)
                     out.println("Ya te vi. ¿Qué estas tramando? No eres un hacker, llegale");
@@ -61,7 +61,7 @@
                     out.println("<br>Error exacto:");
                     out.println(sesion.getAttribute("log"));
                 }
-            %> -->
+            %>
         </section>
     </section>
 
