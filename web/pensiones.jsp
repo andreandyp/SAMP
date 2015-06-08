@@ -24,6 +24,8 @@
                 var opcion = document.getElementById('m');
                 <%
                     HttpSession sesion = request.getSession(false);
+                    if(sesion.getAttribute("usuario") == null || sesion.getAttribute("clave") == null)
+                        response.sendRedirect("/SAMP/error.jsp?error=acceso");
                     String prm = sesion.getAttribute("permisos").toString();
                     if(prm.indexOf('3') == -1)
                         out.println("opcion.remove(3);");
@@ -35,21 +37,14 @@
             }
         </script>
 </head>
-<body>
-    <%
-        if(sesion.getAttribute("usuario") == null || sesion.getAttribute("clave") == null)
-            response.sendRedirect("/SAMP/error.jsp?error=acceso");
-    %>
-
+<body onload="eliminar()">
     <header>
         <div>
             <a href="#" class="btn_menu"><span class="icon-menu3"></span></a>       
         </div>
-
         <figure class="logo_imss">
             <img src="img/imss.jpg" alt="loguito imss">
         </figure>
-
         <nav>
             <ul>
                 <li><a href="#" class="actual">Pensiones</a></li>
@@ -58,12 +53,10 @@
                 <li><a href="#">Usuarios</a></li>
             </ul>
         </nav>
-
         <figure class="logo_gob">
             <img src="img/gob.jpg" alt="loguito imss">
         </figure>
     </header>
-
     <section class="principal">
         <section class="contenido">
             <form method="post" action="pdf" onsubmit="return valida()">
@@ -77,17 +70,14 @@
                     <option value="consultas">Consultas</option>
                     <option value="bajas">Deshabilitar</option>
                 </select>
-
                 <select name="regimen" id="regimen" style="display: none;">
                     <option value="1973">1973/IMSS</option>
                     <option value="1997">1997/Aseguradora</option>
                 </select>
-
                 <input type="submit" value="Enviar">
             </form>
         </section>
     </section>
-
     <footer>
         <figure>
             <img src="" alt="Aquí iría el loguito SAMP si lo tuviera x'D">

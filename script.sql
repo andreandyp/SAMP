@@ -150,5 +150,3 @@ delimiter //
     insert into usuarios values(us,lave,dele,sub,prmiso);
 end //
 delimiter ;
-
-select * from usuarios;

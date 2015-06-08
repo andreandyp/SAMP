@@ -22,21 +22,13 @@
     <script type="text/javascript" src="js/funciones.js"></script>
 </head>
 <body>
-    <%
-        HttpSession sesion = request.getSession(false);
-        if(sesion.getAttribute("usuario") == null || sesion.getAttribute("clave") == null)
-            response.sendRedirect("/SAMP/error.jsp?error=acceso");
-    %>
-
     <header>
         <div>
             <a href="#" class="btn_menu"><span class="icon-menu3"></span></a>       
         </div>
-
         <figure class="logo_imss">
             <img src="img/imss.jpg" alt="loguito imss">
         </figure>
-
         <nav>
             <ul>
                 <li><a href="#" class="actual">Pensiones</a></li>
@@ -45,12 +37,10 @@
                 <li><a href="#">Usuarios</a></li>
             </ul>
         </nav>
-
         <figure class="logo_gob">
             <img src="img/gob.jpg" alt="loguito imss">
         </figure>
     </header>
-
     <section class="principal">
         <section class="contenido">
             <h1>¡El trámite se realizó con éxito!</h1>
@@ -58,6 +48,9 @@
         </section>
     </section>
     <%
+            HttpSession sesion = request.getSession(false);
+            if(sesion.getAttribute("usuario") == null || sesion.getAttribute("clave") == null)
+                response.sendRedirect("/SAMP/error.jsp?error=acceso");
             String hue;
             if(sesion.getAttribute("ruta") != null){
                 hue = sesion.getAttribute("ruta").toString();

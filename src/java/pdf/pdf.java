@@ -24,7 +24,7 @@ public class pdf extends HttpServlet{
     Connection conx;
     Statement stm;
     ResultSet rs;
-    String nss,ruta,usuario,delegacion,subdelegacion,u;
+    String nss,ruta = "/SAMP/error.jsp",usuario,delegacion,subdelegacion,u;
     HttpSession sesion;
     usuario usu;
     Date date;
@@ -54,13 +54,12 @@ public class pdf extends HttpServlet{
                 sesion.setAttribute("subdelegacion", rs.getString(4));
                 sesion.setAttribute("permisos", rs.getString(5));
                 sesion.setMaxInactiveInterval(1*24*60*60);
+                ruta = "/SAMP/menu.jsp";
                 }
-            else{
-                    sesion.setAttribute("Error", "Usuario o clave incorrecto");
-                }
+            else
+                ruta = "/SAMP/error.jsp";
             }
         conx.close();
-        ruta = "/SAMP/menu.jsp";
         }
         catch(SQLException e){
             sesion.setAttribute("log", e.getMessage());

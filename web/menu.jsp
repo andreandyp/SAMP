@@ -9,6 +9,8 @@
             function ocultar(){
             <%
                 HttpSession sesion = request.getSession(false);
+                if(sesion.getAttribute("usuario") == null || sesion.getAttribute("clave") == null)
+                    response.sendRedirect("/SAMP/error.jsp?error=acceso");
                 String prm = sesion.getAttribute("permisos").toString();
                 if(prm.indexOf('1') == -1 && prm.indexOf('2') == -1 && prm.indexOf('3') == -1)
                     out.println("document.getElementById('pensiones').style.display = \"none\";");
@@ -23,10 +25,6 @@
         </script>
     </head>
     <body onload="ocultar()">
-        <%
-            if(sesion.getAttribute("usuario") == null || sesion.getAttribute("clave") == null)
-                response.sendRedirect("/SAMP/error.jsp?error=acceso");
-        %>
         <h1>Bienvenido <%out.println(sesion.getAttribute("usuario"));%></h1>
         <a href="/SAMP/pensiones.jsp" id="pensiones">Pensiones</a><br>
         <a href="/SAMP/casos.jsp" id="casos">Casos especiales</a><br>
