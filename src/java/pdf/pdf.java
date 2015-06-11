@@ -13,8 +13,6 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -221,7 +219,7 @@ public class pdf extends HttpServlet{
             stm.executeQuery("call crear('"+usuario+"','"+clave+"','"+delegacion+"','"+subdelegacion+"','7')");
             date = new Date();
             DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            stm.executeQuery("call registro('"+u+"','Administracion','"+hourdateFormat.format(date)+"')");
+            stm.executeQuery("call registro('"+u+"','Permisos','"+hourdateFormat.format(date)+"')");
             ruta = "/SAMP/permisos.jsp?permisos=7&usuario="+usuario+"";
         }
         catch(SQLException sqlex){
@@ -282,7 +280,7 @@ public class pdf extends HttpServlet{
             ruta = "/SAMP/exito.jsp";
             date = new Date();
             DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            stm.executeQuery("call registro('"+u+"','Administracion','"+hourdateFormat.format(date)+"')");
+            stm.executeQuery("call registro('"+u+"','Permisos','"+hourdateFormat.format(date)+"')");
             conx.close();
         }
         catch(SQLException e){
@@ -315,36 +313,6 @@ public class pdf extends HttpServlet{
         catch(SQLException e){
             sesion.setAttribute("Error", "Error desconocido en la aplicacion");
             sesion.setAttribute("log", e.getMessage());
-            ruta = "/SAMP/error.jsp";
-        }
-        finally{
-            response.sendRedirect(ruta);
-        }
-    }
-    private void log(HttpServletRequest request, HttpServletResponse response) throws IOException{
-        u = request.getParameter("victima");
-        sesion = request.getSession(false);
-        try{conexion();}
-        catch(SQLException | ClassNotFoundException sqle){
-            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
-            sesion.setAttribute("log", sqle.getMessage());
-        }
-        try{
-            rs = stm.executeQuery("call log('"+u+"')");
-            if(rs.next()){
-                if(rs.getString(1) != null){
-                    sesion.setAttribute("temp1", rs.getString(1));
-                    sesion.setAttribute("temp2", rs.getString(2));
-                    ruta = "/SAMP/resultados.jsp?usuario="+u+"";
-                }
-                else{
-                    ruta = "/SAMP/error.jsp";
-                }
-            }
-        }
-        catch(SQLException se){
-            sesion.setAttribute("Error", "Error desconocido en la aplicacion");
-            sesion.setAttribute("log", se.getMessage());
             ruta = "/SAMP/error.jsp";
         }
         finally{
@@ -388,9 +356,6 @@ public class pdf extends HttpServlet{
                 //agregar(request,response);
             case "borrar":
                 borrar(request,response);
-                break;
-            case "log":
-                log(request,response);
                 break;
         }   
     }

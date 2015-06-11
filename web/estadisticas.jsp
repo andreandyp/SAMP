@@ -13,7 +13,7 @@
                 response.sendRedirect("/SAMP/error.jsp?error=acceso");
         %>
         <h1>Ver registro de algun usuario</h1>
-        <form method="get" action="pdf?m=log">
+        <form method="post" action="resultados.jsp">
             <input type="text" placeholder="Usuario" name="victima">
             <input type="submit" value="Ver su registro">
         </form>

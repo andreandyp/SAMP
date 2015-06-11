@@ -150,5 +150,12 @@ delimiter //
     insert into usuarios values(us,lave,dele,sub,prmiso);
 end //
 delimiter ;
+delimiter //
+    create procedure log(in victima nvarchar(10))
+    begin
+        select tramite,fechahora from registro where usuario = victima;
+end //
+delimiter ;
 
 select * from registro;
+call log('Andy');
