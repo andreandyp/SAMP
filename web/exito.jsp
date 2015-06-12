@@ -4,12 +4,15 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
+    
     <title>SAMP - Trámite exitoso</title>
+
     <!-- CSS -->
     <link rel="stylesheet" href="css/estilos_Menu.css" />
     <link rel="stylesheet" href="css/estilos_Exito.css" />
     <link rel="stylesheet" href="css/mediaQueries.css" />
     <link rel="stylesheet" href="fonts/fonts.css" />
+
     <!-- SCRIPT -->
     <script type="text/javascript" src="js/jquery/jquery-1.11.3.js"></script>
     <script type="text/javascript" src="js/jquery/jquery-1.11.3.min.js"></script>
@@ -42,8 +45,8 @@
         <section class="contenido">
             <h1>¡El trámite se realizó con éxito!</h1>
             <input type="button" value="Click para regresar" onclick="javascript:window.location.href='/SAMP/menu.jsp';">
-        </section>
-        <%
+            
+    <%
             HttpSession sesion = request.getSession(false);
             if(sesion.getAttribute("usuario") == null || sesion.getAttribute("clave") == null)
                 response.sendRedirect("/SAMP/error.jsp?error=acceso");
@@ -51,17 +54,13 @@
             if(sesion.getAttribute("ruta") != null){
                 hue = sesion.getAttribute("ruta").toString();
                 if(hue.equals("consultas"))
-                    out.println("<a href=/SAMP/extras/consultas.pdf>Descargar el archivo</a>");
+                    out.println("<a href=/SAMP/extras/consultas.pdf><span class=\"icon-file-pdf\"></span>Descargar el archivo</a>");
                 else
-                    out.println("<a href=/SAMP/extras/"+hue+">Descargar el archivo</a>");
+                    out.println("<a href=/SAMP/extras/"+hue+"><span class=\"icon-file-pdf\"></span>Descargar el archivo</a>");
                 sesion.removeAttribute("ruta");
             }
         %>
+        </section>
     </section>
-    <footer>
-        <figure>
-            <img src="" alt="Aquí iría el loguito SAMP si lo tuviera x'D">
-        </figure>
-    </footer>
 </body>
 </html>

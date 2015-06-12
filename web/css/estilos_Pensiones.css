@@ -27,7 +27,8 @@ section.principal section.contenido {
 
 section.principal section.contenido form input {
 	margin-bottom: 10px;
-	width: 100%;
+	float: left;
+	width: 49%;
 	padding: 10px;
 	background: #B6B6B6;
 	text-align: center;
@@ -50,6 +51,7 @@ input:-moz-placeholder 		{ color:#727272; }
 section.principal section.contenido form input[type="submit"] {
 	background: #009688;
 	color: #fff;
+	width: 98.5%;
 
 	-webkit-transition: all .5s ease;	
 	-moz-transition: all .5s ease;
@@ -62,14 +64,10 @@ section.principal section.contenido form input[type="submit"]:hover {
 	background: #00796B;
 }
 
-section.principal section.contenido form input#digito {
-	width: 50%;
-	float: left;
-}
-
 section.principal section.contenido form select {
 	margin-bottom: 10px;
-	width: 50%;
+	float: left;
+	width: 49%;
 	padding: 9px;
 	background: #00796B;
 	text-align: center;
@@ -82,4 +80,12 @@ section.principal section.contenido form select {
 	-ms-box-sizing: border-box;
 	-o-box-sizing: border-box;
 	box-sizing: border-box;
+}
+
+section.principal section.contenido form input#nss {
+	margin-right: 2px;
+}
+
+section.principal section.contenido form select#m {
+	margin-right: 2px;
 }

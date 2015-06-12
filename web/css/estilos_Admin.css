@@ -60,3 +60,9 @@ section.principal section.contenido form input[type="submit"] {
 section.principal section.contenido form input[type="submit"]:hover {
 	background: #00796B;
 }
+
+section.principal section.contenido div h1 {
+	font-size: 1.2em;
+	margin-top: 1.5em;
+	margin-bottom: .5em;
+}
