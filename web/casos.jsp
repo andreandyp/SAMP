@@ -24,9 +24,9 @@
         </select>
         <input type="text" name="nombrea" placeholder="Nombre del asegurado" id="nombrea" style="display: none;">
         <input type="text" name="nombres" placeholder="Nombre del solicitante" id="nombres" style="display: none;">
-        <input type="text" name="nss" placeholder="NSS" id="nss" style="display: none;">
-        <input type="text" name="folio" placeholder="Folio" id="folio" style="display: none;">
-        <input type="text" name="curp" placeholder="CURP" id="curp" style="display: none;">
+        <input type="text" name="nss" placeholder="NSS" id="nss" maxlength="11" onkeypress="return numeros(event)" style="display: none;">
+        <input type="text" name="folio" placeholder="Folio" id="folio" maxlength="8" onkeypress="return numeros(evet)" style="display: none;">
+        <input type="text" name="curp" placeholder="CURP" id="curp" maxlength="18" style="display: none;">
         <br><input type="submit" value="Solicitar informacion">
     </body>
     </form>

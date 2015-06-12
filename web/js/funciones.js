@@ -75,18 +75,6 @@ function nadas(){
     }else
         return true;
 }
-//function repetir(){
-//    clave1 = document.getElementById('nueva').value;
-//    clave2 = document.getElementById('nueva2').value;
-//    if(clave1 !== clave2){
-//        document.getElementById('coinciden').value = "Las claves no coinciden";
-//        document.getElementById('aceptar').value = "Asignar permisos";
-//    }
-//    else{
-//        document.getElementById('coinciden').value = "Claves iguales";
-//        document.getElementById('aceptar').value = "Asignar permisos y cambiar clave";
-//    }
-//}
 function cambioclave(){
     vieja = clave2 = document.getElementById('vieja').value;
     igual = document.getElementById('coinciden').value;

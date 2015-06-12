@@ -1,4 +1,3 @@
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -37,9 +36,9 @@
         <h1>Actualiza la informacion que tengas</h1>
         <input type="text" name="nombrea" placeholder="Nombre del asegurado" id="nombrea"><br>
         <input type="text" name="nombres" placeholder="Nombre del solicitante" id="nombres"><br>
-        <input type="text" name="nss" placeholder="NSS" id="nss"><br>
-        <input type="text" name="folio" placeholder="Folio" id="folio"><br>
-        <input type="text" name="curp" placeholder="CURP" id="curp"><br>
+        <input type="text" name="nss" placeholder="NSS" id="nss" onkeypress="return numero(event)" maxlength="11"><br>
+        <input type="text" name="folio" placeholder="Folio" id="folio" maxlength="8" onkeypress="return numero(eve)"><br>
+        <input type="text" name="curp" placeholder="CURP" id="curp" maxlength="18"><br>
         <input type="submit" value="Actualizar informacion">
         </form>
     </body>

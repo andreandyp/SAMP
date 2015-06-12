@@ -156,5 +156,3 @@ delimiter //
         select tramite,fechahora from registro where usuario = victima;
 end //
 delimiter ;
-
-select * from personas;

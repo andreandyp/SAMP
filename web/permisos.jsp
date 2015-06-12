@@ -4,11 +4,6 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Permisos disponibles</title>
-        <%
-            HttpSession sesion = request.getSession(false);
-            if(sesion.getAttribute("usuario") == null || sesion.getAttribute("clave") == null)
-                response.sendRedirect("/SAMP/error.jsp?error=acceso");
-        %>
         <script type="text/javascript">
             function cuadritos(){
                 var permisos = <%out.println(request.getParameter("permisos"));%>;
@@ -17,6 +12,9 @@
                     document.getElementById('c'+permisos.charAt(i)).checked = true;
                 }
                 <%
+                HttpSession sesion = request.getSession(false);
+            if(sesion.getAttribute("usuario") == null || sesion.getAttribute("clave") == null)
+                response.sendRedirect("/SAMP/error.jsp?error=acceso");
                     String prm = sesion.getAttribute("permisos").toString();
                     if(prm.indexOf('7') == -1){
                         out.println("document.getElementById('c1').disabled = true;");
@@ -40,10 +38,6 @@
         <script type="text/javascript" src="js/funciones.js"></script>
     </head>
     <body onload="cuadritos()">
-        <%
-                    if(request.getParameter("error") != null)
-                        out.println("Clave incorrecta");
-        %>
         <form name="checks" action="pdf?m=permisos" method="post" onsubmit="return cambioclave()">
             <p>Usuario: <%out.println(request.getParameter("usuario"));%></p>
             <input type="text" value="<%out.println(request.getParameter("usuario"));%>" name="cosa" hidden>

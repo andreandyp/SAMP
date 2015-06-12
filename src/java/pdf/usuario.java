@@ -84,8 +84,4 @@ public class usuario {
         huella = huella.concat(Integer.toString(fecha.get(Calendar.DAY_OF_MONTH)));
         return huella;
     }
-    /*public static void main(String...x){
-        usuario u = new usuario();
-        System.out.println(u.cifrado("IMSS", "56", "023"));
-    }*/
 }

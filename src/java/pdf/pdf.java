@@ -24,7 +24,7 @@ public class pdf extends HttpServlet{
     Connection conx;
     Statement stm;
     ResultSet rs;
-    String nss,ruta = "/SAMP/error.jsp",usuario,delegacion,subdelegacion,u;
+    String nss,usuario,delegacion,subdelegacion,clave,ruta = "/SAMP/error.jsp";
     HttpSession sesion;
     usuario usu;
     Date date;
@@ -35,31 +35,29 @@ public class pdf extends HttpServlet{
     }
     private void inicio(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String user = request.getParameter("user");
-        String pass = request.getParameter("pass");
         sesion = request.getSession(true);
-        sesion.setMaxInactiveInterval(60*60*24);
+        usuario = request.getParameter("user");
+        clave = request.getParameter("pass");
         try{conexion();}
         catch (ClassNotFoundException | SQLException e) {
-            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
             sesion.setAttribute("log", e.getMessage());
         }
         try{
-        rs = stm.executeQuery("call sesion('"+user+"','"+pass+"')");
-        if(rs.next()){
-            if(rs.getString(1) != null){
-                sesion.setAttribute("usuario", rs.getString(1));
-                sesion.setAttribute("clave", rs.getString(2));
-                sesion.setAttribute("delegacion", rs.getString(3));
-                sesion.setAttribute("subdelegacion", rs.getString(4));
-                sesion.setAttribute("permisos", rs.getString(5));
-                sesion.setMaxInactiveInterval(1*24*60*60);
-                ruta = "/SAMP/menu.jsp";
+            rs = stm.executeQuery("call sesion('"+usuario+"','"+clave+"')");
+            if(rs.next()){
+                if(rs.getString(1) != null){
+                    sesion.setAttribute("usuario", rs.getString(1));
+                    sesion.setAttribute("clave", rs.getString(2));
+                    sesion.setAttribute("delegacion", rs.getString(3));
+                    sesion.setAttribute("subdelegacion", rs.getString(4));
+                    sesion.setAttribute("permisos", rs.getString(5));
+                    sesion.setMaxInactiveInterval(1*24*60*60);
+                    ruta = "/SAMP/menu.jsp";
                 }
-            else
-                ruta = "/SAMP/error.jsp";
-            }
-        conx.close();
+                else
+                    ruta = "/SAMP/error.jsp";
+                }
+            conx.close();
         }
         catch(SQLException e){
             sesion.setAttribute("log", e.getMessage());
@@ -79,52 +77,50 @@ public class pdf extends HttpServlet{
     }
     private void cambios(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String regimen,d,s,clave;
-        nss = request.getParameter("nss");
+        String regimen,clave;
         sesion = request.getSession(false);
+        nss = request.getParameter("nss");
         regimen = request.getParameter("regimen");
-        u = sesion.getAttribute("usuario").toString();
-        d = sesion.getAttribute("delegacion").toString();
-        s = sesion.getAttribute("subdelegacion").toString();
+        usuario = sesion.getAttribute("usuario").toString();
+        delegacion = sesion.getAttribute("delegacion").toString();
+        subdelegacion = sesion.getAttribute("subdelegacion").toString();
         try{conexion();}
         catch (ClassNotFoundException | SQLException e) {
-            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
             sesion.setAttribute("log", e.getMessage());
         }
         try{
-        usu = new usuario();
-        clave = usu.cifrado(u,s,d);
-        String doc = getServletConfig().getServletContext().getRealPath ("/");
-        sesion.setAttribute("ruta",clave+"-modif.pdf");
-        FileOutputStream fos = new FileOutputStream(doc+"extras/"+clave+"-modif.pdf");
-        PdfReader reader = new PdfReader(doc+"extras/vaciomodificaciones.pdf");
-        PdfReader.unethicalreading = true;
-        PdfStamper stamper = new PdfStamper(reader, fos);
-        AcroFields form = stamper.getAcroFields();
-        for(int i = 1; i <=12; ++i){
-            rs = stm.executeQuery("call modificaciones('"+nss+"','"+regimen+"')");
-            if(rs.next()){
-                if(rs.getString(1) != null)
-                    form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
+            usu = new usuario();
+            clave = usu.cifrado(usuario,subdelegacion,delegacion);
+            String doc = getServletConfig().getServletContext().getRealPath ("/");
+            sesion.setAttribute("ruta",clave+"-modif.pdf");
+            FileOutputStream fos = new FileOutputStream(doc+"extras/"+clave+"-modif.pdf");
+            PdfReader reader = new PdfReader(doc+"extras/vaciomodificaciones.pdf");
+            PdfReader.unethicalreading = true;
+            PdfStamper stamper = new PdfStamper(reader, fos);
+            AcroFields form = stamper.getAcroFields();
+            for(int i = 1; i <=12; ++i){
+                rs = stm.executeQuery("call modificaciones('"+nss+"','"+regimen+"')");
+                if(rs.next()){
+                    if(rs.getString(1) != null)
+                        form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
+                }
             }
-        }
-        form.setField("text_"+Integer.toString(13),regimen);
-        form.setField("text_"+Integer.toString(14),clave);
-        Date now = new Date();
-        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        form.setField("text_"+Integer.toString(15),df.format(now));
-        stamper.close();
-        reader.close();
-        fos.close();
-        date = new Date();
-        DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        stm.executeQuery("call registro('"+u+"','Pensiones','"+hourdateFormat.format(date)+"')");
-        conx.close();
-        ruta = "/SAMP/exito.jsp";
+            form.setField("text_"+Integer.toString(13),regimen);
+            form.setField("text_"+Integer.toString(14),clave);
+            Date now = new Date();
+            DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+            form.setField("text_"+Integer.toString(15),df.format(now));
+            stamper.close();
+            reader.close();
+            fos.close();
+            date = new Date();
+            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            stm.executeQuery("call registro('"+usuario+"','Pensiones','"+hourdateFormat.format(date)+"')");
+            conx.close();
+            ruta = "/SAMP/exito.jsp";
         }
         catch (DocumentException | SQLException e){
             sesion.setAttribute("log", e.getMessage());
-            sesion.setAttribute("Error", "NSS incorrecto o usuario inexistente");
             ruta = "/SAMP/error.jsp";
         }
         finally{
@@ -133,42 +129,39 @@ public class pdf extends HttpServlet{
     }
     private void consultas(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        u = sesion.getAttribute("usuario").toString();
-        nss = request.getParameter("nss");
         sesion = request.getSession(false);
+        usuario = sesion.getAttribute("usuario").toString();
+        nss = request.getParameter("nss");
         try{conexion();}
         catch (ClassNotFoundException | SQLException e) {
-            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
             sesion.setAttribute("log", e.getMessage());
         }
         try{
-        String doc = getServletConfig().getServletContext().getRealPath ("/");
-        sesion.setAttribute("ruta", "consultas");
-        FileOutputStream fos = new FileOutputStream(doc+"extras/consultas.pdf");
-        PdfReader reader = new PdfReader(doc+"extras/vacioconsultas.pdf");
-        PdfReader.unethicalreading = true;
-        PdfStamper stamper = new PdfStamper(reader, fos);
-        AcroFields form = stamper.getAcroFields();
-
-        for(int i = 1; i <=10; ++i){
-            rs = stm.executeQuery("call consultas('"+nss+"')");
-            if(rs.next()){
-                if(rs.getString(1) != null)
-                    form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
+            String doc = getServletConfig().getServletContext().getRealPath ("/");
+            sesion.setAttribute("ruta", "consultas");
+            FileOutputStream fos = new FileOutputStream(doc+"extras/consultas.pdf");
+            PdfReader reader = new PdfReader(doc+"extras/vacioconsultas.pdf");
+            PdfReader.unethicalreading = true;
+            PdfStamper stamper = new PdfStamper(reader, fos);
+            AcroFields form = stamper.getAcroFields();
+            for(int i = 1; i <=10; ++i){
+                rs = stm.executeQuery("call consultas('"+nss+"')");
+                if(rs.next()){
+                    if(rs.getString(1) != null)
+                        form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
+                }
             }
-        }
-        stamper.close();
-        reader.close();
-        fos.close();
-        date = new Date();
-        DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        stm.executeQuery("call registro('"+u+"','Pensiones','"+hourdateFormat.format(date)+"')");
-        conx.close();
-        ruta = "/SAMP/exito.jsp";
+            stamper.close();
+            reader.close();
+            fos.close();
+            date = new Date();
+            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            stm.executeQuery("call registro('"+usuario+"','Pensiones','"+hourdateFormat.format(date)+"')");
+            conx.close();
+            ruta = "/SAMP/exito.jsp";
         }
         catch (DocumentException | SQLException e){
             sesion.setAttribute("log", e.getMessage());
-            sesion.setAttribute("Error", "NSS incorrecto o usuario deshabilitado");
             ruta = "/SAMP/error.jsp";
         }
         finally{
@@ -177,12 +170,11 @@ public class pdf extends HttpServlet{
     }
     private void bajas(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-        u = sesion.getAttribute("usuario").toString();
-        nss = request.getParameter("nss");
         sesion = request.getSession(false);
+        usuario = sesion.getAttribute("usuario").toString();
+        nss = request.getParameter("nss");
         try{conexion();}
         catch (ClassNotFoundException | SQLException e) {
-            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
             sesion.setAttribute("log", e.getMessage());
         }
         try{
@@ -191,127 +183,9 @@ public class pdf extends HttpServlet{
             ruta = "/SAMP/exito.jsp";
             date = new Date();
             DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            stm.executeQuery("call registro('"+u+"','Pensiones','"+hourdateFormat.format(date)+"')");
+            stm.executeQuery("call registro('"+usuario+"','Pensiones','"+hourdateFormat.format(date)+"')");
             conx.close();
-        } catch (SQLException e) {
-            sesion.setAttribute("Error", "Error desconocido en la aplicacion");
-            sesion.setAttribute("log", e.getMessage());
-            ruta = "/SAMP/error.jsp";
-        }
-        finally{
-            response.sendRedirect(ruta);
-        }
-    }
-    private void crear(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException{
-        String clave = request.getParameter("clave");
-        sesion = request.getSession(false);
-        usuario = request.getParameter("nuevo");
-        delegacion = request.getParameter("delegacion");
-        System.out.println(delegacion);
-        subdelegacion = request.getParameter("subdelegacion");
-        try{conexion();}
-        catch (ClassNotFoundException | SQLException e) {
-            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
-            sesion.setAttribute("log", e.getMessage());
-        }
-        try{
-            stm.executeQuery("call crear('"+usuario+"','"+clave+"','"+delegacion+"','"+subdelegacion+"','7')");
-            date = new Date();
-            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            stm.executeQuery("call registro('"+u+"','Permisos','"+hourdateFormat.format(date)+"')");
-            ruta = "/SAMP/permisos.jsp?permisos=7&usuario="+usuario+"";
-        }
-        catch(SQLException sqlex){
-            sesion.setAttribute("log", sqlex.getMessage());
-            sesion.setAttribute("Error", "Error desconocido con la aplicacion");
-            ruta = "/SAMP/error.jsp";
-        }
-        finally{
-            response.sendRedirect(ruta);
-        }
-    }
-    private void usuarios(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException{
-        String user = request.getParameter("usuario");
-        sesion = request.getSession(false);
-        try{conexion();}
-        catch (ClassNotFoundException | SQLException e) {
-            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
-            sesion.setAttribute("log", e.getMessage());
-        }
-        try{
-        rs = stm.executeQuery("call permisos1('"+user+"')");
-        if(rs.next()){
-            if(rs.getString(1) != null)
-                ruta = "/SAMP/permisos.jsp?permisos="+rs.getString(1)+"&usuario="+rs.getString(2);
-            else
-                sesion.setAttribute("Error", "El usuario no existe");
-            }
-        conx.close();
-        }
-        catch(SQLException e){
-            sesion.setAttribute("log", e.getMessage());
-            ruta = "/SAMP/error.jsp";
-        }
-        finally{
-            response.sendRedirect(ruta);
-        }
-    }
-    private void permisos(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException{
-        u = sesion.getAttribute("usuario").toString();
-        sesion = request.getSession(false);
-        String [] permiso = request.getParameterValues("permiso");
-        String per = "";
-        String usu = request.getParameter("cosa");
-        for(int i = 0; i < permiso.length; i++){
-            per = per.concat(permiso[i]);
-        }
-        try{conexion();}
-        catch (ClassNotFoundException | SQLException e) {
-            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
-            sesion.setAttribute("log", e.getMessage());
-        }
-        try{
-            rs = stm.executeQuery("call permisos2('"+usu+"','"+per+"')");
-            if(usu.equals(sesion.getAttribute("usuario").toString()))
-                sesion.setAttribute("permisos", per);
-            ruta = "/SAMP/exito.jsp";
-            date = new Date();
-            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            stm.executeQuery("call registro('"+u+"','Permisos','"+hourdateFormat.format(date)+"')");
-            conx.close();
-        }
-        catch(SQLException e){
-            sesion.setAttribute("Error", "Error desconocido en la aplicacion");
-            sesion.setAttribute("log", e.getMessage());
-            ruta = "/SAMP/error.jsp";
-        }
-        finally{
-            response.sendRedirect(ruta);
-        }
-    }
-    private void borrar(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException{
-        u = sesion.getAttribute("usuario").toString();
-        sesion = request.getSession(false);
-        String usu = request.getParameter("cosa2");
-        try{conexion();}
-        catch (ClassNotFoundException | SQLException e) {
-            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
-            sesion.setAttribute("log", e.getMessage());
-        }
-        try{
-            rs = stm.executeQuery("call eliminar('"+usu+"')");
-            ruta = "/SAMP/exito.jsp";
-            date = new Date();
-            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            stm.executeQuery("call registro('"+u+"','Permisos','"+hourdateFormat.format(date)+"')");
-            conx.close();
-        }
-        catch(SQLException e){
-            sesion.setAttribute("Error", "Error desconocido en la aplicacion");
+        }catch (SQLException e) {
             sesion.setAttribute("log", e.getMessage());
             ruta = "/SAMP/error.jsp";
         }
@@ -322,9 +196,9 @@ public class pdf extends HttpServlet{
     private void extras(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException{
         String combo,query,buscar;
+        sesion = request.getSession(false);
         combo = request.getParameter("info");
         query = "select nombrea,nombres,nss,folio,curp from personas where ";
-        sesion = request.getSession(false);
         try{conexion();}
         catch (ClassNotFoundException | SQLException e) {
             sesion.setAttribute("Error", "Error con la conexion a la base de datos");
@@ -364,19 +238,16 @@ public class pdf extends HttpServlet{
             }
         }
         catch(SQLException sqlhue){
-            sesion.setAttribute("Error", "Error desconocido en la aplicacion");
-            System.out.println(sqlhue.getMessage());
             sesion.setAttribute("log", sqlhue.getMessage());
             ruta = "/SAMP/error.jsp";
         }
         finally{
-            System.out.println(ruta);
             response.sendRedirect(ruta);
         }
     }
     private void actualizar(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException{
-        String nombrea,nombres,nss,folio,curp,query;
+        String nombrea,nombres,folio,curp;
         sesion = request.getSession(false);
         nombrea = request.getParameter("nombrea");
         nombres = request.getParameter("nombres");
@@ -385,7 +256,6 @@ public class pdf extends HttpServlet{
         curp = request.getParameter("curp");
         try{conexion();}
         catch (ClassNotFoundException | SQLException e) {
-            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
             sesion.setAttribute("log", e.getMessage());
         }
         try{
@@ -395,8 +265,117 @@ public class pdf extends HttpServlet{
             ruta = "/SAMP/exito.jsp";
         }
         catch(SQLException sqlhue){
-            sesion.setAttribute("Error", "Error desconocido en la aplicacion");
             sesion.setAttribute("log", sqlhue.getMessage());
+            ruta = "/SAMP/error.jsp";
+        }
+        finally{
+            response.sendRedirect(ruta);
+        }
+    }
+    private void crear(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException{
+        sesion = request.getSession(false);
+        clave = request.getParameter("clave");
+        usuario = request.getParameter("nuevo");
+        delegacion = request.getParameter("delegacion");
+        subdelegacion = request.getParameter("subdelegacion");
+        try{conexion();}
+        catch (ClassNotFoundException | SQLException e) {
+            sesion.setAttribute("log", e.getMessage());
+        }
+        try{
+            stm.executeQuery("call crear('"+usuario+"','"+clave+"','"+delegacion+"','"+subdelegacion+"','7')");
+            date = new Date();
+            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            stm.executeQuery("call registro('"+usuario+"','Permisos','"+hourdateFormat.format(date)+"')");
+            ruta = "/SAMP/permisos.jsp?permisos=7&usuario="+usuario+"";
+        }
+        catch(SQLException sqlex){
+            sesion.setAttribute("log", sqlex.getMessage());
+            ruta = "/SAMP/error.jsp";
+        }
+        finally{
+            response.sendRedirect(ruta);
+        }
+    }
+    private void usuarios(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException{
+        sesion = request.getSession(false);
+        usuario = request.getParameter("usuario");
+        try{conexion();}
+        catch (ClassNotFoundException | SQLException e) {
+            sesion.setAttribute("log", e.getMessage());
+        }
+        try{
+            rs = stm.executeQuery("call permisos1('"+usuario+"')");
+            if(rs.next()){
+                if(rs.getString(1) != null)
+                    ruta = "/SAMP/permisos.jsp?permisos="+rs.getString(1)+"&usuario="+rs.getString(2);
+                else
+                    sesion.setAttribute("Error", "El usuario no existe");
+                }
+            conx.close();
+        }
+        catch(SQLException e){
+            sesion.setAttribute("log", e.getMessage());
+            ruta = "/SAMP/error.jsp";
+        }
+        finally{
+            response.sendRedirect(ruta);
+        }
+    }
+    private void permisos(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException{
+        String [] permiso;
+        String usu,per = "";
+        sesion = request.getSession(false);
+        usuario = sesion.getAttribute("usuario").toString();
+        permiso = request.getParameterValues("permiso");
+        usu = request.getParameter("cosa");
+        for(int i = 0; i < permiso.length; i++){
+            per = per.concat(permiso[i]);
+        }
+        try{conexion();}
+        catch (ClassNotFoundException | SQLException e) {
+            sesion.setAttribute("log", e.getMessage());
+        }
+        try{
+            rs = stm.executeQuery("call permisos2('"+usu+"','"+per+"')");
+            if(usu.equals(sesion.getAttribute("usuario").toString()))
+                sesion.setAttribute("permisos", per);
+            ruta = "/SAMP/exito.jsp";
+            date = new Date();
+            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            stm.executeQuery("call registro('"+usuario+"','Permisos','"+hourdateFormat.format(date)+"')");
+            conx.close();
+        }
+        catch(SQLException e){
+            sesion.setAttribute("log", e.getMessage());
+            ruta = "/SAMP/error.jsp";
+        }
+        finally{
+            response.sendRedirect(ruta);
+        }
+    }
+    private void borrar(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException{
+        sesion = request.getSession(false);
+        usuario = sesion.getAttribute("usuario").toString();
+        String usu = request.getParameter("cosa2");
+        try{conexion();}
+        catch (ClassNotFoundException | SQLException e) {
+            sesion.setAttribute("log", e.getMessage());
+        }
+        try{
+            rs = stm.executeQuery("call eliminar('"+usu+"')");
+            ruta = "/SAMP/exito.jsp";
+            date = new Date();
+            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            stm.executeQuery("call registro('"+usuario+"','Permisos','"+hourdateFormat.format(date)+"')");
+            conx.close();
+        }
+        catch(SQLException e){
+            sesion.setAttribute("log", e.getMessage());
             ruta = "/SAMP/error.jsp";
         }
         finally{
@@ -427,6 +406,9 @@ public class pdf extends HttpServlet{
             case "extras":
                 extras(request,response);
                 break;
+            case "actualizar":
+                actualizar(request,response);
+                break;
             case "crear":
                 crear(request,response);
                 break;
@@ -436,9 +418,6 @@ public class pdf extends HttpServlet{
             case "permisos":
                 permisos(request,response);
                 break;
-            case "actualizar":
-                actualizar(request,response);
-                break;
             case "borrar":
                 borrar(request,response);
                 break;
@@ -446,6 +425,6 @@ public class pdf extends HttpServlet{
     }
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Servlet maestro para la app SAMP";
     }// </editor-fold>
 }
