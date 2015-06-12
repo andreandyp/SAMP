@@ -157,5 +157,4 @@ delimiter //
 end //
 delimiter ;
 
-select * from registro;
-call log('Andy');
+select * from personas;

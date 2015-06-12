@@ -97,3 +97,50 @@ function cambioclave(){
     else
         return true;
 }
+function casos(){
+    opc = document.getElementById('info').value;
+    switch(opc){
+        case "nombrea":
+            document.getElementById('nombrea').style.display = "block";
+            document.getElementById('nombres').style.display = "none";
+            document.getElementById('nss').style.display = "none";
+            document.getElementById('folio').style.display = "none";
+            document.getElementById('curp').style.display = "none";
+            break;
+        case "nombres":
+            document.getElementById('nombrea').style.display = "none";
+            document.getElementById('nombres').style.display = "block";
+            document.getElementById('nss').style.display = "none";
+            document.getElementById('folio').style.display = "none";
+            document.getElementById('curp').style.display = "none";
+            break;
+        case "nss":
+            document.getElementById('nombrea').style.display = "none";
+            document.getElementById('nombres').style.display = "none";
+            document.getElementById('nss').style.display = "block";
+            document.getElementById('folio').style.display = "none";
+            document.getElementById('curp').style.display = "none";
+            break;
+        case "folio":
+            document.getElementById('nombrea').style.display = "none";
+            document.getElementById('nombres').style.display = "none";
+            document.getElementById('nss').style.display = "none";
+            document.getElementById('folio').style.display = "block";
+            document.getElementById('curp').style.display = "none";
+            break;
+        case "curp":
+            document.getElementById('nombrea').style.display = "none";
+            document.getElementById('nombres').style.display = "none";
+            document.getElementById('nss').style.display = "none";
+            document.getElementById('folio').style.display = "none";
+            document.getElementById('curp').style.display = "block";
+            break;
+        default:
+            document.getElementById('nombrea').style.display = "none";
+            document.getElementById('nombres').style.display = "none";
+            document.getElementById('nss').style.display = "none";
+            document.getElementById('folio').style.display = "none";
+            document.getElementById('curp').style.display = "none";
+            break;
+    }
+}

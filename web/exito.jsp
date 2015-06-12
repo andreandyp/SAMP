@@ -46,8 +46,7 @@
             <h1>¡El trámite se realizó con éxito!</h1>
             <input type="button" value="Click para regresar" onclick="javascript:window.location.href='/SAMP/menu.jsp';">
         </section>
-    </section>
-    <%
+        <%
             HttpSession sesion = request.getSession(false);
             if(sesion.getAttribute("usuario") == null || sesion.getAttribute("clave") == null)
                 response.sendRedirect("/SAMP/error.jsp?error=acceso");
@@ -61,6 +60,7 @@
                 sesion.removeAttribute("ruta");
             }
         %>
+    </section>
     <footer>
         <figure>
             <img src="" alt="Aquí iría el loguito SAMP si lo tuviera x'D">

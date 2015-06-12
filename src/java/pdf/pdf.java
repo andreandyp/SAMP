@@ -319,6 +319,90 @@ public class pdf extends HttpServlet{
             response.sendRedirect(ruta);
         }
     }
+    private void extras(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException{
+        String combo,query,buscar;
+        combo = request.getParameter("info");
+        query = "select nombrea,nombres,nss,folio,curp from personas where ";
+        sesion = request.getSession(false);
+        try{conexion();}
+        catch (ClassNotFoundException | SQLException e) {
+            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+            sesion.setAttribute("log", e.getMessage());
+        }
+        try{
+            switch(combo){
+                case "nombrea":
+                    buscar = request.getParameter("nombrea");
+                    rs = stm.executeQuery(query+"nombrea = '"+buscar+"'");
+                    break;
+                case "nombres":
+                    buscar = request.getParameter("nombres");
+                    rs = stm.executeQuery(query+"nombres = '"+buscar+"'");
+                    break;
+                case "nss":
+                    buscar = request.getParameter("nss");
+                    rs = stm.executeQuery(query+"nss = '"+buscar+"'");
+                    break;
+                case "folio":
+                    buscar = request.getParameter("folio");
+                    rs = stm.executeQuery(query+"folio = '"+buscar+"'");
+                    break;
+                case "curp":
+                    buscar = request.getParameter("curp");
+                    rs = stm.executeQuery(query+"curp = '"+buscar+"'");
+                    break;
+            }
+            if(rs.next()){
+                if(!rs.getString(combo).equals("")){
+                ruta = "/SAMP/actualizar.jsp?nombrea="+rs.getString(1)+"&nombres="+rs.getString(2)+
+                        "&nss="+rs.getString(3)+"&folio="+rs.getString(4)+"&curp="+rs.getString(5);
+                }
+                else{
+                    sesion.setAttribute("Error", "No se encontraron datos");
+                }
+            }
+        }
+        catch(SQLException sqlhue){
+            sesion.setAttribute("Error", "Error desconocido en la aplicacion");
+            System.out.println(sqlhue.getMessage());
+            sesion.setAttribute("log", sqlhue.getMessage());
+            ruta = "/SAMP/error.jsp";
+        }
+        finally{
+            System.out.println(ruta);
+            response.sendRedirect(ruta);
+        }
+    }
+    private void actualizar(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException{
+        String nombrea,nombres,nss,folio,curp,query;
+        sesion = request.getSession(false);
+        nombrea = request.getParameter("nombrea");
+        nombres = request.getParameter("nombres");
+        nss = request.getParameter("nss");
+        folio = request.getParameter("folio");
+        curp = request.getParameter("curp");
+        try{conexion();}
+        catch (ClassNotFoundException | SQLException e) {
+            sesion.setAttribute("Error", "Error con la conexion a la base de datos");
+            sesion.setAttribute("log", e.getMessage());
+        }
+        try{
+            stm.executeUpdate("update personas set nombrea='"+nombrea+"',nombres='"+nombres+"',nss='"+
+                nss+"',folio='"+folio+"',curp='"+curp+"' where nombrea='"+nombrea+"' or nombres='"+
+                nombres+"' or nss='"+nss+"' or folio='"+folio+"' or curp='"+curp+"'");
+            ruta = "/SAMP/exito.jsp";
+        }
+        catch(SQLException sqlhue){
+            sesion.setAttribute("Error", "Error desconocido en la aplicacion");
+            sesion.setAttribute("log", sqlhue.getMessage());
+            ruta = "/SAMP/error.jsp";
+        }
+        finally{
+            response.sendRedirect(ruta);
+        }
+    }
     // <editor-fold defaultstate="collapsed" desc="Metodos">
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -341,7 +425,7 @@ public class pdf extends HttpServlet{
                 bajas(request,response);
                 break;
             case "extras":
-                //extras(request,response);
+                extras(request,response);
                 break;
             case "crear":
                 crear(request,response);
@@ -352,8 +436,9 @@ public class pdf extends HttpServlet{
             case "permisos":
                 permisos(request,response);
                 break;
-            case "agregar":
-                //agregar(request,response);
+            case "actualizar":
+                actualizar(request,response);
+                break;
             case "borrar":
                 borrar(request,response);
                 break;
