@@ -55,7 +55,7 @@ public class pdf extends HttpServlet{
                     ruta = "/SAMP/menu.jsp";
                 }
                 else
-                    ruta = "/SAMP/error.jsp";
+                    ruta = "/SAMP/error.jsp?e=noexiste";
                 }
             conx.close();
         }
@@ -98,30 +98,34 @@ public class pdf extends HttpServlet{
             PdfReader.unethicalreading = true;
             PdfStamper stamper = new PdfStamper(reader, fos);
             AcroFields form = stamper.getAcroFields();
-            for(int i = 1; i <=12; ++i){
-                rs = stm.executeQuery("call modificaciones('"+nss+"','"+regimen+"')");
-                if(rs.next()){
-                    if(rs.getString(1) != null)
-                        form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
+            rs = stm.executeQuery("call modificaciones('"+nss+"','"+regimen+"')");
+            if(rs.next()){
+                if(rs.getString(1) != null){
+                    for(int i = 1; i <=12; ++i){
+                        rs = stm.executeQuery("call modificaciones('"+nss+"','"+regimen+"')");
+                        if(rs.next())
+                            form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
+                
+                    }
+                form.setField("text_"+Integer.toString(13),regimen);
+                form.setField("text_"+Integer.toString(14),clave);
+                Date now = new Date();
+                DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+                form.setField("text_"+Integer.toString(15),df.format(now));
+                stamper.close();
+                reader.close();
+                fos.close();
+                date = new Date();
+                DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                stm.executeQuery("call registro('"+usuario+"','Pensiones','"+hourdateFormat.format(date)+"')");
+                conx.close();
+                ruta = "/SAMP/exito.jsp";
                 }
             }
-            form.setField("text_"+Integer.toString(13),regimen);
-            form.setField("text_"+Integer.toString(14),clave);
-            Date now = new Date();
-            DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
-            form.setField("text_"+Integer.toString(15),df.format(now));
-            stamper.close();
-            reader.close();
-            fos.close();
-            date = new Date();
-            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            stm.executeQuery("call registro('"+usuario+"','Pensiones','"+hourdateFormat.format(date)+"')");
-            conx.close();
-            ruta = "/SAMP/exito.jsp";
         }
         catch (DocumentException | SQLException e){
             sesion.setAttribute("log", e.getMessage());
-            ruta = "/SAMP/error.jsp";
+            ruta = "/SAMP/error.jsp?e=noexiste";
         }
         finally{
             response.sendRedirect(ruta);
@@ -144,25 +148,28 @@ public class pdf extends HttpServlet{
             PdfReader.unethicalreading = true;
             PdfStamper stamper = new PdfStamper(reader, fos);
             AcroFields form = stamper.getAcroFields();
-            for(int i = 1; i <=10; ++i){
-                rs = stm.executeQuery("call consultas('"+nss+"')");
-                if(rs.next()){
-                    if(rs.getString(1) != null)
-                        form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
+            rs = stm.executeQuery("call consultas('"+nss+"')");
+            if(rs.next()){
+                if(rs.getString(1) != null){
+                    for(int i = 1; i <=10; ++i){
+                        rs = stm.executeQuery("call consultas('"+nss+"')");
+                        if(rs.next())
+                            form.setField("text_"+Integer.toString(i),rs.getObject(i).toString());
+                    }
+                    stamper.close();
+                    reader.close();
+                fos.close();
+                date = new Date();
+                DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                stm.executeQuery("call registro('"+usuario+"','Pensiones','"+hourdateFormat.format(date)+"')");
+                conx.close();
+                ruta = "/SAMP/exito.jsp";
                 }
             }
-            stamper.close();
-            reader.close();
-            fos.close();
-            date = new Date();
-            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            stm.executeQuery("call registro('"+usuario+"','Pensiones','"+hourdateFormat.format(date)+"')");
-            conx.close();
-            ruta = "/SAMP/exito.jsp";
         }
         catch (DocumentException | SQLException e){
             sesion.setAttribute("log", e.getMessage());
-            ruta = "/SAMP/error.jsp";
+            ruta = "/SAMP/error.jsp?e=noexiste";
         }
         finally{
             response.sendRedirect(ruta);
@@ -179,7 +186,6 @@ public class pdf extends HttpServlet{
         }
         try{
             stm.executeQuery("call bajas('"+nss+"')");
-            sesion.setAttribute("Archivo",null);
             ruta = "/SAMP/exito.jsp";
             date = new Date();
             DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -187,7 +193,7 @@ public class pdf extends HttpServlet{
             conx.close();
         }catch (SQLException e) {
             sesion.setAttribute("log", e.getMessage());
-            ruta = "/SAMP/error.jsp";
+            ruta = "/SAMP/error.jsp?e=noexiste";
         }
         finally{
             response.sendRedirect(ruta);
@@ -231,11 +237,13 @@ public class pdf extends HttpServlet{
                 if(!rs.getString(combo).equals("")){
                 ruta = "/SAMP/actualizar.jsp?nombrea="+rs.getString(1)+"&nombres="+rs.getString(2)+
                         "&nss="+rs.getString(3)+"&folio="+rs.getString(4)+"&curp="+rs.getString(5);
-                }
-                else{
-                    sesion.setAttribute("Error", "No se encontraron datos");
+                date = new Date();
+                DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                stm.executeQuery("call registro('"+usuario+"','Casos','"+hourdateFormat.format(date)+"')");
                 }
             }
+            else
+                ruta = "/SAMP/error.jsp?e=noexiste";
         }
         catch(SQLException sqlhue){
             sesion.setAttribute("log", sqlhue.getMessage());
@@ -262,6 +270,9 @@ public class pdf extends HttpServlet{
             stm.executeUpdate("update personas set nombrea='"+nombrea+"',nombres='"+nombres+"',nss='"+
                 nss+"',folio='"+folio+"',curp='"+curp+"' where nombrea='"+nombrea+"' or nombres='"+
                 nombres+"' or nss='"+nss+"' or folio='"+folio+"' or curp='"+curp+"'");
+            date = new Date();
+            DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            stm.executeQuery("call registro('"+usuario+"','Casos','"+hourdateFormat.format(date)+"')");
             ruta = "/SAMP/exito.jsp";
         }
         catch(SQLException sqlhue){
@@ -284,7 +295,7 @@ public class pdf extends HttpServlet{
             sesion.setAttribute("log", e.getMessage());
         }
         try{
-            stm.executeQuery("call crear('"+usuario+"','"+clave+"','"+delegacion+"','"+subdelegacion+"','7')");
+            stm.executeUpdate("insert into usuarios values('"+usuario+"','"+clave+"','"+delegacion+"','"+subdelegacion+"','7')");
             date = new Date();
             DateFormat hourdateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             stm.executeQuery("call registro('"+usuario+"','Permisos','"+hourdateFormat.format(date)+"')");
@@ -312,7 +323,7 @@ public class pdf extends HttpServlet{
                 if(rs.getString(1) != null)
                     ruta = "/SAMP/permisos.jsp?permisos="+rs.getString(1)+"&usuario="+rs.getString(2);
                 else
-                    sesion.setAttribute("Error", "El usuario no existe");
+                    ruta = "/SAMP/error.jsp?e=noexiste";
                 }
             conx.close();
         }

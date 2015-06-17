@@ -148,14 +148,16 @@ delimiter //
 end //
 delimiter ;
 delimiter //
-    create procedure crear(in us nvarchar(10),in lave nvarchar(16),in dele int(2),in sub int(3),in prmiso nvarchar(10))
-    begin
-    insert into usuarios values(us,lave,dele,sub,prmiso);
-end //
-delimiter ;
-delimiter //
     create procedure log(in victima nvarchar(10))
     begin
+    declare hue nvarchar(10);
+    set hue = (select tramite from registro where usuario = victima);
+    if hue != null then
         select tramite,fechahora from registro where usuario = victima;
+        else
+select null as valido;
+end if;
 end //
 delimiter ;
+
+call bajas(0000000000);
