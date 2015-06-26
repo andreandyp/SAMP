@@ -48,7 +48,8 @@
                     if(request.getParameter("e").equals("noexiste"))
                         out.println("El usuario no existe");
                 }
-                out.println("<br>Error exacto: "+sesion.getAttribute("log").toString());
+                if(sesion.getAttribute("log") != null)
+                    out.println("<br>Error exacto: "+sesion.getAttribute("log").toString());
             %>
         </section>
     </section>

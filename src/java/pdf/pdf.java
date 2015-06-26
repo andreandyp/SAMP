@@ -24,7 +24,7 @@ public class pdf extends HttpServlet{
     Connection conx;
     Statement stm;
     ResultSet rs;
-    String nss,usuario,delegacion,subdelegacion,clave,ruta = "/SAMP/error.jsp";
+    String nss = "",usuario,delegacion,subdelegacion,clave,ruta = "/SAMP/error.jsp";
     HttpSession sesion;
     usuario usu;
     Date date;

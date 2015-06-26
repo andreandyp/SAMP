@@ -150,14 +150,7 @@ delimiter ;
 delimiter //
     create procedure log(in victima nvarchar(10))
     begin
-    declare hue nvarchar(10);
-    set hue = (select tramite from registro where usuario = victima);
-    if hue != null then
         select tramite,fechahora from registro where usuario = victima;
-        else
-select null as valido;
-end if;
 end //
 delimiter ;
-
-call bajas(0000000000);
+select * from usuarios;

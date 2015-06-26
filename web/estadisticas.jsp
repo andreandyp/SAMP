@@ -55,7 +55,7 @@
         <section class="contenido">
             <h1>Ver registro de algún usuario</h1>
 
-            <form method="post" action="resultados.jsp">
+            <form method="get" action="resultados.jsp">
                 <input type="text" placeholder="Usuario" name="victima">
                 <input type="submit" value="Ver su registro">
             </form>
